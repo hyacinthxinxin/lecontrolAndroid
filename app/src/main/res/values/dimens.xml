@@ -1,0 +1,5 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="toolbar_line_vertical_height">1dp</dimen>
+
+</resources>

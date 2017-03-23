@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/cam_mode_textView"
+        android:textColor="@color/mainTextColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cam_mode" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/cam_mode_textView"
+        android:orientation="horizontal"
+        android:layout_marginTop="24dp" >
+
+        <RadioButton
+            android:id="@+id/cam_mode_heating_radioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/cam_mode_heating" />
+
+        <RadioButton
+            android:id="@+id/cam_mode_refrigeration_radioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cam_mode_refrigeration" />
+
+        <RadioButton
+            android:id="@+id/cam_mode_ventilation_radioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cam_mode_ventilation" />
+        <RadioButton
+            android:id="@+id/cam_mode_desiccant_radioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cam_mode_desiccant" />
+    </RadioGroup>
+
+</RelativeLayout>
