@@ -6,5 +6,6 @@
 
     <color name="globalBg">#271e36</color>
     <color name="mainTextColor">#FFFFEE</color>
+    <color name="lineColor">#12ffffff</color> // 7% alpha White
 
 </resources>

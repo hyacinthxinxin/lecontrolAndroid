@@ -2,22 +2,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/device_type_item"
     android:layout_width="fill_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
-    android:background="@color/gray">
-
+    android:layout_height="wrap_content" >
     <ImageView
         android:id="@+id/device_type_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="15dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/device_group_scene" />
+        android:src="@drawable/device_group_scene"
+        android:contentDescription="Device Type Image"/>
 
     <TextView
         android:id="@+id/device_type_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/device_type_image"
+        android:layout_marginBottom="70dp"
         android:layout_centerHorizontal="true"
         android:text="@string/device_type_name"
         android:textColor="@android:color/white"

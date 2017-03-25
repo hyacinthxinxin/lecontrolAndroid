@@ -7,6 +7,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cs1119it.fanxin.lecontrol.R;
+import com.cs1119it.fanxin.lecontrol.deviceViewHolder.AirConditioningViewHolder;
+import com.cs1119it.fanxin.lecontrol.deviceViewHolder.BaseDeviceViewHolder;
+import com.cs1119it.fanxin.lecontrol.deviceViewHolder.CurtainViewHolder;
+import com.cs1119it.fanxin.lecontrol.deviceViewHolder.FloorHeatViewHolder;
+import com.cs1119it.fanxin.lecontrol.deviceViewHolder.FreshAirViewHolder;
+import com.cs1119it.fanxin.lecontrol.deviceViewHolder.LightViewHolder;
+import com.cs1119it.fanxin.lecontrol.deviceViewHolder.SceneViewHolder;
 import com.cs1119it.fanxin.lecontrol.model.Device;
 
 import java.util.List;
@@ -34,24 +41,30 @@ public class DeviceAdapter extends RecyclerView.Adapter {
         switch (viewType) {
             case 0:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.device_scene_item, null);
-                return new DeviceAdapter.SceneViewHolder(view);
+
+                return new SceneViewHolder(view);
             case 1:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.device_light_item, null);
 //                View lightSliderView = view.findViewById(R.id.cam_slider_light);
 //                lightSliderView.setVisibility(View.GONE);
-                return new DeviceAdapter.LightViewHolder(view);
+                return new LightViewHolder(view);
             case 2:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.device_curtain_item, null);
-                return new DeviceAdapter.CurtainViewHolder(view);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.device_light_item, null);
+//                View lightSliderView = view.findViewById(R.id.cam_slider_light);
+//                lightSliderView.setVisibility(View.GONE);
+                return new LightViewHolder(view);
             case 3:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.device_air_conditioning_item, null);
-                return new DeviceAdapter.AirConditioningViewHolder(view);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.device_curtain_item, null);
+                return new CurtainViewHolder(view);
             case 4:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.device_floor_heat_item, null);
-                return new DeviceAdapter.FloorHeatViewHolder(view);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.device_air_conditioning_item, null);
+                return new AirConditioningViewHolder(view);
             case 5:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.device_floor_heat_item, null);
+                return new FloorHeatViewHolder(view);
+            case 6:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.device_fresh_air_item, null);
-                return new DeviceAdapter.FreshAirViewHolder(view);
+                return new FreshAirViewHolder(view);
             default:
                 System.out.println("default");
                 return null;
@@ -60,54 +73,13 @@ public class DeviceAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
+        BaseDeviceViewHolder h = (BaseDeviceViewHolder) holder;
+        h.setDevice(devices.get(position));
     }
 
     @Override
     public int getItemCount() {
         return devices.size();
-    }
-
-    private class SceneViewHolder extends RecyclerView.ViewHolder {
-        TextView sceneNameTv;
-
-        private SceneViewHolder(View itemView) {
-            super(itemView);
-            sceneNameTv = (TextView) itemView.findViewById(R.id.scene_textView);
-        }
-    }
-
-    private class LightViewHolder extends RecyclerView.ViewHolder {
-        TextView lightNameTv;
-
-        private LightViewHolder(View itemView) {
-            super(itemView);
-            lightNameTv = (TextView) itemView.findViewById(R.id.switch_textView);
-        }
-    }
-
-    private class CurtainViewHolder extends RecyclerView.ViewHolder {
-        private CurtainViewHolder(View itemView) {
-            super(itemView);
-        }
-    }
-
-    private class AirConditioningViewHolder extends RecyclerView.ViewHolder {
-        private AirConditioningViewHolder(View itemView) {
-            super(itemView);
-        }
-    }
-
-    private class FloorHeatViewHolder extends RecyclerView.ViewHolder {
-        private FloorHeatViewHolder(View itemView) {
-            super(itemView);
-        }
-    }
-
-    private class FreshAirViewHolder extends RecyclerView.ViewHolder {
-        private FreshAirViewHolder(View itemView) {
-            super(itemView);
-        }
     }
 
 }

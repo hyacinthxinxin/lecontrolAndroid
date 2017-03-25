@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.cs1119it.fanxin.lecontrol.Listener.DeviceTypeClickListener;
 import com.cs1119it.fanxin.lecontrol.adpter.AreaDetailAdapter;
 import com.cs1119it.fanxin.lecontrol.adpter.FloorAndAreaAdapter;
 import com.cs1119it.fanxin.lecontrol.model.Area;
@@ -85,14 +84,6 @@ public class AreaDetailActivity extends AppCompatActivity {
         });
         recyclerView.setAdapter(adapter);
 
-//        recyclerView.addOnItemTouchListener(new DeviceTypeClickListener(recyclerView,
-//                new DeviceTypeClickListener.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(View view, int position) {
-//                        Toast.makeText(AreaDetailActivity.this, "touch click:" + position, Toast.LENGTH_SHORT).show();
-//                    }
-//
-//                }));
     }
 
 }

@@ -12,6 +12,7 @@ import com.cs1119it.fanxin.lecontrol.R;
 import com.cs1119it.fanxin.lecontrol.model.Area;
 import com.cs1119it.fanxin.lecontrol.model.Building;
 import com.cs1119it.fanxin.lecontrol.model.Floor;
+import com.cs1119it.fanxin.lecontrol.unit.Constant;
 import com.cs1119it.fanxin.lecontrol.unit.SocketManager;
 
 import java.util.ArrayList;
@@ -67,6 +68,7 @@ public class FloorAndAreaAdapter extends RecyclerView.Adapter {
             h.position = h.getAdapterPosition();
             Area area = list.get(position);
             h.areaTv.setText(area.getName());
+            h.areaIv.setImageResource(Constant.getAreaImage(area.getImageName()));
         }
 
     }
@@ -105,7 +107,6 @@ public class FloorAndAreaAdapter extends RecyclerView.Adapter {
         private FloorViewHolder(View itemView) {
             super(itemView);
             floorTv = (TextView) itemView.findViewById(R.id.floor_name_textView);
-
         }
     }
 

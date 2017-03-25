@@ -7,12 +7,14 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.cs1119it.fanxin.lecontrol.adpter.DeviceAdapter;
 import com.cs1119it.fanxin.lecontrol.model.Area;
 import com.cs1119it.fanxin.lecontrol.model.Cam;
 import com.cs1119it.fanxin.lecontrol.model.Device;
+import com.cs1119it.fanxin.lecontrol.unit.SocketManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +51,11 @@ public class DeviceActivity extends AppCompatActivity {
     }
 
     private void initData(){
-        devices = new ArrayList<>();
+        devices = SocketManager.sharedSocket().getDevicesByDeviceGroupType(this.deviceGroupType);
+        for (Device device: devices) {
+            Log.d("NamesOfAllTheDevices:", device.getName());
+        }
+
     }
 
     private void initView() {
@@ -57,44 +63,10 @@ public class DeviceActivity extends AppCompatActivity {
         if (deviceGroupType == 0) {
             RecyclerView.LayoutManager layoutManager = new GridLayoutManager(DeviceActivity.this, 2, GridLayoutManager.VERTICAL,false);
             recyclerView.setLayoutManager(layoutManager);
-            for(int i=0; i<10; i++) {
-                Device device = new Device("场景"+String.valueOf(i), "ic");
-                device.setiType(0);
-                List<Cam> cams = new ArrayList<>();
-
-                Cam cam = new Cam("启动", "iii");
-                cams.add(cam);
-                device.setCams(cams);
-
-                devices.add(device);
-            }
         } else {
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(DeviceActivity.this, LinearLayoutManager.VERTICAL,false);
             recyclerView.setLayoutManager(layoutManager);
-            for(int i=0; i<5; i++) {
-                Device device = new Device("灯光"+String.valueOf(i), "ic");
-                device.setiType(1);
-                List<Cam> cams = new ArrayList<>();
-
-                Cam cam = new Cam("开关", "iii");
-                cams.add(cam);
-                device.setCams(cams);
-
-                devices.add(device);
-            }
-            for(int i=0; i<5; i++) {
-                Device device = new Device("灯光"+String.valueOf(i), "ic");
-                device.setiType(3);
-                List<Cam> cams = new ArrayList<>();
-
-                Cam cam = new Cam("开关", "iii");
-                cams.add(cam);
-                device.setCams(cams);
-
-                devices.add(device);
-            }
         }
-
         DeviceAdapter deviceAdapter = new DeviceAdapter(devices);
         recyclerView.setAdapter(deviceAdapter);
     }

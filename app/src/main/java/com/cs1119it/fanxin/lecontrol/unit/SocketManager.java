@@ -5,6 +5,7 @@ import android.util.Log;
 import com.cs1119it.fanxin.lecontrol.FloorAndAreaActivity;
 import com.cs1119it.fanxin.lecontrol.model.Area;
 import com.cs1119it.fanxin.lecontrol.model.Building;
+import com.cs1119it.fanxin.lecontrol.model.Cam;
 import com.cs1119it.fanxin.lecontrol.model.Device;
 import com.cs1119it.fanxin.lecontrol.model.Floor;
 
@@ -37,6 +38,11 @@ public class SocketManager {
     }
 
     Building building;
+    Area area;
+
+    public Area getArea() {
+        return area;
+    }
 
     public Building getBuilding() {
         return building;
@@ -82,6 +88,7 @@ public class SocketManager {
                     area.setFloorId(areaOb.getInt("floor_id"));
                     area.setAreaId(areaOb.getInt("id"));
                     area.setName(areaOb.getString("name"));
+                    area.setImageName(areaOb.getString("image_name"));
                     JSONArray deviceArray = areaOb.getJSONArray("devices");
                     List<Device> devices = new ArrayList<>();
                     for (int k=0; k<deviceArray.length(); k++) {
@@ -89,6 +96,17 @@ public class SocketManager {
                         Device device = new Device();
                         device.setName(deviceOb.getString("name"));
                         device.setiType(deviceOb.getInt("i_type"));
+                        JSONArray camArray = deviceOb.getJSONArray("cams");
+                        List<Cam> cams = new ArrayList<>();
+                        for (int l=0; l<camArray.length(); l++) {
+                            JSONObject camOb = camArray.getJSONObject(l);
+                            Cam cam = new Cam();
+                            cam.setiType(camOb.getInt("i_type"));
+                            cam.setName(camOb.getString("name"));
+                            cam.setControlAddress(camOb.getString("control_address"));
+                            cams.add(cam);
+                        }
+                        device.setCams(cams);
                         devices.add(device);
                     }
                     area.setDevices(devices);
@@ -98,8 +116,6 @@ public class SocketManager {
                 floors.add(floor);
             }
             building.setFloors(floors);
-            Log.d("Model","json parse complete");
-            Log.d("Model",building.getSocketAddress());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -108,7 +124,7 @@ public class SocketManager {
 
     private Floor getFloor(Integer floorId) {
         for (Floor floor: building.getFloors()) {
-            if  (floor.getFloorId() == floorId) {
+            if  (floor.getFloorId().equals(floorId)) {
                 return floor;
             }
         }
@@ -118,10 +134,44 @@ public class SocketManager {
     public Area getArea(Integer floorId, Integer areaId) {
         Floor floor = getFloor(floorId);
         for (Area area: floor.getAreas()) {
-            if  (area.getAreaId() == areaId) {
+            if  (area.getAreaId().equals(areaId)) {
+                this.area = area;
                 return area;
             }
         }
         return new Area();
     }
+
+    public List<Device> getDevicesByDeviceGroupType(Integer deviceGroupType) {
+        List<Device> devices = new ArrayList<>();
+        for (int i=0; i<area.getDevices().size(); i++) {
+            Device device = area.getDevices().get(i);
+            switch (deviceGroupType) {
+                case 0:
+                    if (device.getiType() == 0) {
+                        devices.add(device);
+                    }
+                    break;
+                case 1:
+                    if (device.getiType() == 1 || device.getiType() == 2) {
+                        devices.add(device);
+                    }
+                    break;
+                case 2:
+                    if (device.getiType() == 3) {
+                        devices.add(device);
+                    }
+                    break;
+                case 3:
+                    if (device.getiType() == 4 || device.getiType() == 5 || device.getiType() == 6) {
+                        devices.add(device);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        return devices;
+    }
+
 }

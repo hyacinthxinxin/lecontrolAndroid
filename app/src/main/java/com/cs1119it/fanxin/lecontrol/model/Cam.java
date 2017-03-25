@@ -9,6 +9,15 @@ import java.io.Serializable;
 public class Cam extends LecModel implements Serializable {
     Integer iType;
     Integer deviceId;
+    String controlAddress;
+
+    public String getControlAddress() {
+        return controlAddress;
+    }
+
+    public void setControlAddress(String controlAddress) {
+        this.controlAddress = controlAddress;
+    }
 
     public Integer getDeviceId() {
         return deviceId;
@@ -28,11 +37,18 @@ public class Cam extends LecModel implements Serializable {
         this.camId = camId;
     }
 
+    public Cam() {
+        this.name = "";
+        this.imageName = "";
+        this.iType = 0;
+        this.controlAddress = "0/0/0";
+    }
 
     public Cam(String name, String imageName) {
         this.name = name;
         this.imageName = imageName;
         this.iType = 0;
+        this.controlAddress = "0/0/0";
     }
 
     public Integer getiType() {

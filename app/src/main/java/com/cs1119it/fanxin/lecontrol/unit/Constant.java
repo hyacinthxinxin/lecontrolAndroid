@@ -7,23 +7,7 @@ import com.cs1119it.fanxin.lecontrol.R;
  */
 
 public class Constant {
-    public static int getDeviceTypeImage(String name) {
-        switch (name){
-            case "device_group_scene":
-                return R.drawable.device_group_scene;
-            case "device_group_light":
-                return R.drawable.device_group_light;
-            case "device_group_curtain":
-                return R.drawable.device_group_curtain;
-            case "device_group_temperature":
-                return R.drawable.device_group_temperature;
-            default:
-                return 0;
-        }
-    }
-
-    public static int getImage(String name){
-        //设置头像
+    public static int getAreaImage(String name){
         switch (name){
             case "chess-cards":
                 return R.mipmap.chess_cards_room;
@@ -58,6 +42,29 @@ public class Constant {
             case "other_room":
             default:
                 return R.mipmap.other_room;
+        }
+    }
+
+    public static int getDeviceTypeImage(String name) {
+        switch (name){
+            case "device_group_scene":
+                return R.drawable.device_group_scene;
+            case "device_group_light":
+                return R.drawable.device_group_light;
+            case "device_group_curtain":
+                return R.drawable.device_group_curtain;
+            case "device_group_temperature":
+                return R.drawable.device_group_temperature;
+            default:
+                return 0;
+        }
+    }
+
+    public static int getSceneImage(String name) {
+        switch (name) {
+            case "":
+                return R.mipmap.chess_cards_room;
+            default:return 0;
         }
     }
 }
