@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/cam_slider_light"
+    android:id="@+id/cam_slider_temperature"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/cam_slider_light_textView"
+        android:id="@+id/cam_slider_temperature_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -15,34 +15,30 @@
         android:layout_marginStart="18dp"
         android:layout_marginTop="27dp"
         android:textColor="@color/mainTextColor"
-        android:text="调光" />
-
+        android:text="调温" />
 
     <ImageView
-        android:id="@+id/lc_iv_brightness1"
+        android:id="@+id/tc_iv_tem1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginRight="2dp"
-        android:src="@mipmap/switch_dimmer" />
+        android:src="@mipmap/temperature_lower" />
 
     <SeekBar
-        android:id="@+id/cam_slider_light_seekBar"
         style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
+        android:id="@+id/cam_slider_temperature_seekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/lc_iv_brightness2"
-        android:layout_toRightOf="@+id/lc_iv_brightness1"
-        android:indeterminate="false" />
+        android:layout_toLeftOf="@+id/tc_iv_tem2"
+        android:layout_toRightOf="@+id/tc_iv_tem1" />
 
     <ImageView
-        android:id="@+id/lc_iv_brightness2"
+        android:id="@+id/tc_iv_tem2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="2dp"
-        android:src="@mipmap/switch_brighter" />
+        android:src="@mipmap/temperature_higher" />
 
 </RelativeLayout>

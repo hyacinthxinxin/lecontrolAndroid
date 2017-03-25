@@ -4,30 +4,30 @@
     android:layout_height="match_parent">
 
     <include
-        android:id="@+id/air_conditioning_switch"
+        android:id="@+id/device_air_conditioning_switch"
         layout="@layout/cam_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
     <include
-        android:id="@+id/air_conditioning_temperature"
-        layout="@layout/cam_slider_light"
+        android:id="@+id/device_air_conditioning_temperature"
+        layout="@layout/cam_slider_temperature"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/air_conditioning_switch" />
+        android:layout_below="@+id/device_air_conditioning_switch" />
 
     <include
-        android:id="@+id/air_conditioning_speed"
+        android:id="@+id/device_air_conditioning_speed"
         layout="@layout/cam_speed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/air_conditioning_temperature" />
+        android:layout_below="@+id/device_air_conditioning_temperature" />
 
     <include
-        android:id="@+id/air_conditioning_mode"
+        android:id="@+id/device_air_conditioning_mode"
         layout="@layout/cam_mode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/air_conditioning_speed" />
+        android:layout_below="@+id/device_air_conditioning_speed" />
 
 </RelativeLayout>

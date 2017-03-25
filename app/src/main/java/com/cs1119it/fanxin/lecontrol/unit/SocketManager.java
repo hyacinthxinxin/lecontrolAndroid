@@ -8,6 +8,7 @@ import com.cs1119it.fanxin.lecontrol.model.Building;
 import com.cs1119it.fanxin.lecontrol.model.Cam;
 import com.cs1119it.fanxin.lecontrol.model.Device;
 import com.cs1119it.fanxin.lecontrol.model.Floor;
+import com.cs1119it.fanxin.lecontrol.service.SocketConnect;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,6 +18,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,14 +28,13 @@ import java.util.List;
  */
 
 public class SocketManager {
+    public SocketConnect socketConnect;
 
     private SocketManager(){};
     public static SocketManager sharedSocket(){
         return SocketManagerHolder.sInstance;
     }
-    /**
-     * 静态内部类
-     */
+
     private static class SocketManagerHolder{
         private static final SocketManager sInstance = new SocketManager();
     }
@@ -119,6 +121,8 @@ public class SocketManager {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        socketConnect = new SocketConnect(building.getSocketAddress(), building.getSocketPort());
+        socketConnect.reConnect();
         return building;
     }
 

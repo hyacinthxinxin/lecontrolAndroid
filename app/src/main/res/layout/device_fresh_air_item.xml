@@ -2,4 +2,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
+    <include
+        android:id="@+id/device_fresh_air_switch"
+        layout="@layout/cam_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <include
+        android:id="@+id/device_fresh_air_speed"
+        layout="@layout/cam_speed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/device_fresh_air_temperature" />
+
+
 </RelativeLayout>

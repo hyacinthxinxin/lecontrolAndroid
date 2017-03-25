@@ -41,17 +41,10 @@ public class DeviceAdapter extends RecyclerView.Adapter {
         switch (viewType) {
             case 0:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.device_scene_item, null);
-
                 return new SceneViewHolder(view);
             case 1:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.device_light_item, null);
-//                View lightSliderView = view.findViewById(R.id.cam_slider_light);
-//                lightSliderView.setVisibility(View.GONE);
-                return new LightViewHolder(view);
             case 2:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.device_light_item, null);
-//                View lightSliderView = view.findViewById(R.id.cam_slider_light);
-//                lightSliderView.setVisibility(View.GONE);
                 return new LightViewHolder(view);
             case 3:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.device_curtain_item, null);
@@ -66,7 +59,6 @@ public class DeviceAdapter extends RecyclerView.Adapter {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.device_fresh_air_item, null);
                 return new FreshAirViewHolder(view);
             default:
-                System.out.println("default");
                 return null;
         }
     }

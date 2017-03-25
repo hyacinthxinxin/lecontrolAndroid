@@ -4,7 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="?android:attr/listPreferredItemHeight">
     <TextView
-        android:id="@+id/switch_textView"
+        android:id="@+id/cam_switch_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -17,12 +17,12 @@
         android:text="TextView" />
 
     <Switch
-        android:id="@+id/switch_switch"
+        android:id="@+id/cam_switch_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/switch_textView"
+        android:layout_alignTop="@+id/cam_switch_textView"
         android:layout_marginEnd="50dp"
         android:layout_marginRight="50dp" />
 

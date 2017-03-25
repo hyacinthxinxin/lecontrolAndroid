@@ -1,5 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#008888" >
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:orientation="horizontal">
+                <include
+                    android:id="@+id/device_curtain_sender1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    layout="@layout/cam_scene" />
+
+                <include
+                    android:id="@+id/device_curtain_sender2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    layout="@layout/cam_scene" />
+
+                <include
+                    android:id="@+id/device_curtain_sender3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#aa0011"
+                    layout="@layout/cam_scene" />
+
+                <include
+                    android:id="@+id/device_curtain_sender4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    layout="@layout/cam_scene" />
+
+
+
+        </LinearLayout>
 
 </RelativeLayout>

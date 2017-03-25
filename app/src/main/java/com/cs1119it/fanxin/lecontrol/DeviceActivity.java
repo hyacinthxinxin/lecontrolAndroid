@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.cs1119it.fanxin.lecontrol.adpter.DeviceAdapter;
 import com.cs1119it.fanxin.lecontrol.model.Area;
@@ -27,6 +28,13 @@ public class DeviceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device);
+        setupToolBar();
+        getIntentValues();
+        initData();
+        initView();
+    }
+
+    private void setupToolBar() {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.device_toolbar);
         setSupportActionBar(toolbar);
@@ -39,23 +47,16 @@ public class DeviceActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void getIntentValues() {
         Intent intent = getIntent();
-        String deviceTypeName = intent.getStringExtra("DeviceGroupName");
-        setTitle(deviceTypeName);
-
+        setTitle(intent.getStringExtra("DeviceGroupName"));
         deviceGroupType = intent.getIntExtra("DeviceGroupType", 0);
-
-        initData();
-        initView();
-
     }
 
     private void initData(){
         devices = SocketManager.sharedSocket().getDevicesByDeviceGroupType(this.deviceGroupType);
-        for (Device device: devices) {
-            Log.d("NamesOfAllTheDevices:", device.getName());
-        }
-
     }
 
     private void initView() {

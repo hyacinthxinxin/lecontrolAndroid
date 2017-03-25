@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <ImageButton
         android:id="@+id/scene_imageButton"
@@ -10,7 +11,10 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="44dp"
-        app:srcCompat="@mipmap/down_click" />
+        android:background="#00000000"
+        android:contentDescription="Scene Image"
+        app:srcCompat="@mipmap/mode_back_home_nor"
+        />
 
     <TextView
         android:id="@+id/scene_textView"
@@ -19,5 +23,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/scene_imageButton"
         android:layout_marginTop="22dp"
+        android:textColor="@color/mainTextColor"
         android:text="TextView" />
+
 </RelativeLayout>

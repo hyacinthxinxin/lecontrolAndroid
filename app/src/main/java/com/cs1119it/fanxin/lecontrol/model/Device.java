@@ -51,13 +51,20 @@ public class Device extends LecModel implements Serializable {
     }
 
     public List<Cam> getCams() {
-        if (null == cams) {
-            return new ArrayList<>();
-        }
         return cams;
     }
 
     public void setCams(List<Cam> cams) {
         this.cams = cams;
     }
+
+    public Cam getCamByCamType(Integer camType) {
+        for (Cam cam: getCams()) {
+            if (cam.getiType().equals(camType)) {
+                return cam;
+            }
+        }
+        return new Cam();
+    }
+
 }
