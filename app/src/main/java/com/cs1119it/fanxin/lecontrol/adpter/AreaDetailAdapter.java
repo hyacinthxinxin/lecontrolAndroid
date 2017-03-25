@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.cs1119it.fanxin.lecontrol.R;
 import com.cs1119it.fanxin.lecontrol.model.Area;
+import com.cs1119it.fanxin.lecontrol.model.DeviceGroupType;
+import com.cs1119it.fanxin.lecontrol.unit.Constant;
 
 import java.util.List;
 
@@ -25,10 +27,10 @@ public class AreaDetailAdapter extends RecyclerView.Adapter {
         this.onDeviceTypeChoose = onDeviceTypeChoose;
     }
 
-    private List<String> deviceTypes;
+    private List<DeviceGroupType> deviceGroupTypes;
 
-    public AreaDetailAdapter(List<String> deviceTypes) {
-        this.deviceTypes = deviceTypes;
+    public AreaDetailAdapter(List<DeviceGroupType> deviceGroupTypes) {
+        this.deviceGroupTypes = deviceGroupTypes;
     }
 
     private class DeviceTypeViewHolder extends RecyclerView.ViewHolder {
@@ -63,14 +65,15 @@ public class AreaDetailAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         DeviceTypeViewHolder h = (DeviceTypeViewHolder) holder;
         h.position = h.getAdapterPosition();
-        String name = deviceTypes.get(position);
+        String name = deviceGroupTypes.get(position).getName();
         h.deviceTypeTv.setText(name);
+        String imageName = deviceGroupTypes.get(position).getImageName();
+        h.deviceTypeIv.setImageResource(Constant.getDeviceTypeImage(imageName));
     }
 
     @Override
     public int getItemCount() {
-        return deviceTypes.size();
+        return deviceGroupTypes.size();
     }
-
 
 }

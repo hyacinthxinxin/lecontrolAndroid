@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:src="@mipmap/logo" />
+        android:src="@drawable/device_group_scene" />
 
     <TextView
         android:id="@+id/device_type_name"

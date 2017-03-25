@@ -9,8 +9,14 @@ import com.cs1119it.fanxin.lecontrol.R;
 public class Constant {
     public static int getDeviceTypeImage(String name) {
         switch (name){
-            case "chess-cards":
-                return R.mipmap.chess_cards_room;
+            case "device_group_scene":
+                return R.drawable.device_group_scene;
+            case "device_group_light":
+                return R.drawable.device_group_light;
+            case "device_group_curtain":
+                return R.drawable.device_group_curtain;
+            case "device_group_temperature":
+                return R.drawable.device_group_temperature;
             default:
                 return 0;
         }

@@ -19,7 +19,7 @@ import java.util.List;
 
 public class DeviceActivity extends AppCompatActivity {
     List<Device> devices;
-    Integer deviceType;
+    Integer deviceGroupType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +38,10 @@ public class DeviceActivity extends AppCompatActivity {
         });
 
         Intent intent = getIntent();
-        String deviceTypeName = intent.getStringExtra("DeviceTypeName");
+        String deviceTypeName = intent.getStringExtra("DeviceGroupName");
         setTitle(deviceTypeName);
 
-        deviceType = intent.getIntExtra("DeviceType", 0);
+        deviceGroupType = intent.getIntExtra("DeviceGroupType", 0);
 
         initData();
         initView();
@@ -54,7 +54,7 @@ public class DeviceActivity extends AppCompatActivity {
 
     private void initView() {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.device_recycler_view);
-        if (deviceType == 0) {
+        if (deviceGroupType == 0) {
             RecyclerView.LayoutManager layoutManager = new GridLayoutManager(DeviceActivity.this, 2, GridLayoutManager.VERTICAL,false);
             recyclerView.setLayoutManager(layoutManager);
             for(int i=0; i<10; i++) {

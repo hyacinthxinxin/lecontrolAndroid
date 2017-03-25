@@ -18,6 +18,7 @@ import com.cs1119it.fanxin.lecontrol.adpter.AreaDetailAdapter;
 import com.cs1119it.fanxin.lecontrol.adpter.FloorAndAreaAdapter;
 import com.cs1119it.fanxin.lecontrol.model.Area;
 import com.cs1119it.fanxin.lecontrol.model.Device;
+import com.cs1119it.fanxin.lecontrol.model.DeviceGroupType;
 import com.cs1119it.fanxin.lecontrol.unit.SocketManager;
 
 import java.io.InputStream;
@@ -26,6 +27,7 @@ import java.util.List;
 
 public class AreaDetailActivity extends AppCompatActivity {
     private Area area;
+    private List<DeviceGroupType> deviceGroupTypes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,34 +55,29 @@ public class AreaDetailActivity extends AppCompatActivity {
     }
 
     private void initView(){
-        Log.d("devices count", "init view");
 
-        for (int i=0; i<area.getDevices().size(); i++) {
-            Log.d("devices count", area.getDevices().get(i).getName());
-        }
-        final List<String> deviceTypes;
+        deviceGroupTypes = new ArrayList<>();
+        deviceGroupTypes.add(new DeviceGroupType(0, "场景", "device_group_scene"));
+        deviceGroupTypes.add(new DeviceGroupType(1, "灯光", "device_group_light"));
+        deviceGroupTypes.add(new DeviceGroupType(2, "窗帘", "device_group_curtain"));
+        deviceGroupTypes.add(new DeviceGroupType(3, "温度", "device_group_temperature"));
 
-        deviceTypes = new ArrayList<>();
-        deviceTypes.add("场景");
-        deviceTypes.add("灯光");
-        deviceTypes.add("窗帘");
-        deviceTypes.add("温度");
 
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.device_type_recycler_view);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(AreaDetailActivity.this, 2, GridLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
 
-        AreaDetailAdapter adapter = new AreaDetailAdapter(deviceTypes);
+        AreaDetailAdapter adapter = new AreaDetailAdapter(deviceGroupTypes);
         adapter.setOnDeviceTypeChoose(new AreaDetailAdapter.OnDeviceTypeChoose() {
             @Override
             public void onDeviceTypeClick(int position) {
 //                Toast.makeText(AreaDetailActivity.this, "touch click:" + position, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent();
-                String type = deviceTypes.get(position);
+                String type = deviceGroupTypes.get(position).getName();
 
-                intent.putExtra("DeviceTypeName", type);
-                intent.putExtra("DeviceType", position);
+                intent.putExtra("DeviceGroupName", type);
+                intent.putExtra("DeviceGroupType", position);
 
                 intent.setClass(AreaDetailActivity.this, DeviceActivity.class);
                 startActivity(intent);
