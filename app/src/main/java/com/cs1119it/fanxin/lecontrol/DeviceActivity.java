@@ -15,12 +15,16 @@ import com.cs1119it.fanxin.lecontrol.adpter.DeviceAdapter;
 import com.cs1119it.fanxin.lecontrol.model.Area;
 import com.cs1119it.fanxin.lecontrol.model.Cam;
 import com.cs1119it.fanxin.lecontrol.model.Device;
+import com.cs1119it.fanxin.lecontrol.service.ReceiveData;
+import com.cs1119it.fanxin.lecontrol.unit.ByteStringUtil;
 import com.cs1119it.fanxin.lecontrol.unit.SocketManager;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeviceActivity extends AppCompatActivity {
+public class DeviceActivity extends AppCompatActivity implements ReceiveData {
     List<Device> devices;
     Integer deviceGroupType;
 
@@ -32,6 +36,15 @@ public class DeviceActivity extends AppCompatActivity {
         getIntentValues();
         initData();
         initView();
+
+        new Thread() {
+            @Override
+            public void run() {
+                SocketManager.sharedSocket().setReceiveData(DeviceActivity.this);
+                super.run();
+            }
+        };
+
     }
 
     private void setupToolBar() {
@@ -71,4 +84,11 @@ public class DeviceActivity extends AppCompatActivity {
         DeviceAdapter deviceAdapter = new DeviceAdapter(devices);
         recyclerView.setAdapter(deviceAdapter);
     }
+
+
+    @Override
+    public void receiveData(String str) {
+        Toast.makeText(getBaseContext(), str, Toast.LENGTH_SHORT).show();
+    }
+
 }

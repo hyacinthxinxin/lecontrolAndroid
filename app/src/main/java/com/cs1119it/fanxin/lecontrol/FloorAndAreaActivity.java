@@ -17,14 +17,6 @@ import com.cs1119it.fanxin.lecontrol.model.Area;
 import com.cs1119it.fanxin.lecontrol.model.Building;
 import com.cs1119it.fanxin.lecontrol.model.Floor;
 import com.cs1119it.fanxin.lecontrol.unit.SocketManager;
-import com.koushikdutta.async.http.AsyncHttpClient;
-import com.koushikdutta.async.http.socketio.Acknowledge;
-import com.koushikdutta.async.http.socketio.ConnectCallback;
-import com.koushikdutta.async.http.socketio.EventCallback;
-import com.koushikdutta.async.http.socketio.JSONCallback;
-import com.koushikdutta.async.http.socketio.SocketIOClient;
-import com.koushikdutta.async.http.socketio.SocketIORequest;
-import com.koushikdutta.async.http.socketio.transport.SocketIOTransport;
 
 import org.json.JSONArray;
 import org.json.JSONException;

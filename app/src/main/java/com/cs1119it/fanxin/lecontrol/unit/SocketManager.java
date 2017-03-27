@@ -2,22 +2,25 @@ package com.cs1119it.fanxin.lecontrol.unit;
 
 import android.util.Log;
 
-import com.cs1119it.fanxin.lecontrol.FloorAndAreaActivity;
+import com.alibaba.fastjson.util.IOUtils;
 import com.cs1119it.fanxin.lecontrol.model.Area;
 import com.cs1119it.fanxin.lecontrol.model.Building;
 import com.cs1119it.fanxin.lecontrol.model.Cam;
 import com.cs1119it.fanxin.lecontrol.model.Device;
 import com.cs1119it.fanxin.lecontrol.model.Floor;
-import com.cs1119it.fanxin.lecontrol.service.SocketConnect;
+import com.cs1119it.fanxin.lecontrol.service.ReceiveData;
+import com.google.common.io.ByteStreams;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -28,9 +31,12 @@ import java.util.List;
  */
 
 public class SocketManager {
-    public SocketConnect socketConnect;
+    private static Socket client = null;
+    private String socket_address;
+    private int socket_port;
+    private boolean isConnected = false;
+    private ReceiveData receiveData;
 
-    private SocketManager(){};
     public static SocketManager sharedSocket(){
         return SocketManagerHolder.sInstance;
     }
@@ -38,6 +44,61 @@ public class SocketManager {
     private static class SocketManagerHolder{
         private static final SocketManager sInstance = new SocketManager();
     }
+
+    private SocketManager(){};
+
+    public void reConnect() {
+        new Thread() {
+            @Override
+            public void run() {
+                setBuildingDetail();
+                socket_address = building.getSocketAddress();
+                socket_port = building.getSocketPort();
+                try {
+                    client = new Socket(socket_address, socket_port);
+                    client.setSoTimeout(3000);
+                    isConnected = true;
+                    Log.e("JAVA", "建立连接：" + client);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+
+
+    }
+
+    public void sendMsg(final String str) {
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    if (!client.isClosed()) {
+                        client.getOutputStream().write(ByteStringUtil.hexStrToByteArray(str));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                super.run();
+            }
+        }.start();
+    }
+
+    public void setReceiveData(ReceiveData receiveData) {
+        this.receiveData = receiveData;
+        try {
+            InputStream inputStream = client.getInputStream();
+            byte[] bytes = new byte[0];
+            bytes = new byte[inputStream.available()];
+            inputStream.read(bytes);
+            receiveData.receiveData(ByteStringUtil.byteArrayToHexStr(bytes));
+        }   catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+//    ***********************
 
     Building building;
     Area area;
@@ -49,7 +110,6 @@ public class SocketManager {
     public Building getBuilding() {
         return building;
     }
-
 
     public Building setBuildingDetail() {
         building = new Building();
@@ -121,8 +181,7 @@ public class SocketManager {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        socketConnect = new SocketConnect(building.getSocketAddress(), building.getSocketPort());
-        socketConnect.reConnect();
+
         return building;
     }
 

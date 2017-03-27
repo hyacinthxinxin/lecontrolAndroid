@@ -1,7 +1,10 @@
 package com.cs1119it.fanxin.lecontrol;
 
 import android.app.Application;
+import android.content.Intent;
+import android.content.res.Configuration;
 
+import com.cs1119it.fanxin.lecontrol.service.SocketService;
 import com.cs1119it.fanxin.lecontrol.unit.SocketManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 
@@ -15,17 +18,20 @@ import okhttp3.OkHttpClient;
 
 public class MyApplication extends Application {
     @Override
-    public void onCreate()
-    {
+    public void onCreate() {
         super.onCreate();
-        SocketManager.sharedSocket().setBuildingDetail();
 
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .connectTimeout(10000L, TimeUnit.MILLISECONDS)
-                .readTimeout(10000L, TimeUnit.MILLISECONDS)
-                .build();
+        Intent intent_socketService = new Intent(this, SocketService.class);
+        startService(intent_socketService);
+    }
 
-        OkHttpUtils.initClient(okHttpClient);
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
 
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
     }
 }
