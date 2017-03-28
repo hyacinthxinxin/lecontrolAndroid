@@ -37,35 +37,47 @@ public class SocketManager {
     private boolean isConnected = false;
     private ReceiveData receiveData;
 
-    public static SocketManager sharedSocket(){
+    public static SocketManager sharedSocket() {
         return SocketManagerHolder.sInstance;
     }
 
-    private static class SocketManagerHolder{
+    private static class SocketManagerHolder {
         private static final SocketManager sInstance = new SocketManager();
     }
 
-    private SocketManager(){};
+    private SocketManager() {
+        setBuildingDetail();
+        reConnect();
+    }
 
-    public void reConnect() {
-        new Thread() {
-            @Override
-            public void run() {
-                setBuildingDetail();
-                socket_address = building.getSocketAddress();
-                socket_port = building.getSocketPort();
-                try {
-                    client = new Socket(socket_address, socket_port);
-                    client.setSoTimeout(3000);
-                    isConnected = true;
-                    Log.e("JAVA", "建立连接：" + client);
+    private void reConnect() {
+        socket_address = building.getSocketAddress();
+        socket_port = building.getSocketPort();
+        try {
+            client = new Socket(socket_address, socket_port);
+            client.setSoTimeout(3000);
+            isConnected = true;
+            Log.e("JAVA", "建立连接：" + client);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+    }
+
+    public void setListener(ReceiveData receiveData) {
+        this.receiveData = receiveData;
+        Log.d("Socket Manager", "Receive Data");
+        while (client != null && !client.isClosed()) {
+            try {
+                InputStream inputStream = client.getInputStream();
+                byte[] bytes = new byte[0];
+                bytes = new byte[inputStream.available()];
+                inputStream.read(bytes);
+                this.receiveData.receiveData(ByteStringUtil.byteArrayToHexStr(bytes));
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        }.start();
-
+        }
 
     }
 
@@ -87,15 +99,6 @@ public class SocketManager {
 
     public void setReceiveData(ReceiveData receiveData) {
         this.receiveData = receiveData;
-        try {
-            InputStream inputStream = client.getInputStream();
-            byte[] bytes = new byte[0];
-            bytes = new byte[inputStream.available()];
-            inputStream.read(bytes);
-            receiveData.receiveData(ByteStringUtil.byteArrayToHexStr(bytes));
-        }   catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 //    ***********************
@@ -137,14 +140,14 @@ public class SocketManager {
 
             JSONArray floorArray = buildingOb.getJSONArray("floors");
             List<Floor> floors = new ArrayList<>();
-            for (int i=0; i<floorArray.length(); i++) {
+            for (int i = 0; i < floorArray.length(); i++) {
                 JSONObject floorOb = floorArray.getJSONObject(i);
                 Floor floor = new Floor();
                 floor.setFloorId(floorOb.getInt("id"));
                 floor.setName(floorOb.getString("name"));
                 JSONArray areaArray = floorOb.getJSONArray("areas");
                 List<Area> areas = new ArrayList<>();
-                for (int j=0; j<areaArray.length(); j++) {
+                for (int j = 0; j < areaArray.length(); j++) {
                     JSONObject areaOb = areaArray.getJSONObject(j);
                     Area area = new Area();
                     area.setFloorId(areaOb.getInt("floor_id"));
@@ -153,14 +156,14 @@ public class SocketManager {
                     area.setImageName(areaOb.getString("image_name"));
                     JSONArray deviceArray = areaOb.getJSONArray("devices");
                     List<Device> devices = new ArrayList<>();
-                    for (int k=0; k<deviceArray.length(); k++) {
+                    for (int k = 0; k < deviceArray.length(); k++) {
                         JSONObject deviceOb = deviceArray.getJSONObject(k);
                         Device device = new Device();
                         device.setName(deviceOb.getString("name"));
                         device.setiType(deviceOb.getInt("i_type"));
                         JSONArray camArray = deviceOb.getJSONArray("cams");
                         List<Cam> cams = new ArrayList<>();
-                        for (int l=0; l<camArray.length(); l++) {
+                        for (int l = 0; l < camArray.length(); l++) {
                             JSONObject camOb = camArray.getJSONObject(l);
                             Cam cam = new Cam();
                             cam.setiType(camOb.getInt("i_type"));
@@ -186,8 +189,8 @@ public class SocketManager {
     }
 
     private Floor getFloor(Integer floorId) {
-        for (Floor floor: building.getFloors()) {
-            if  (floor.getFloorId().equals(floorId)) {
+        for (Floor floor : building.getFloors()) {
+            if (floor.getFloorId().equals(floorId)) {
                 return floor;
             }
         }
@@ -196,8 +199,8 @@ public class SocketManager {
 
     public Area getArea(Integer floorId, Integer areaId) {
         Floor floor = getFloor(floorId);
-        for (Area area: floor.getAreas()) {
-            if  (area.getAreaId().equals(areaId)) {
+        for (Area area : floor.getAreas()) {
+            if (area.getAreaId().equals(areaId)) {
                 this.area = area;
                 return area;
             }
@@ -207,7 +210,7 @@ public class SocketManager {
 
     public List<Device> getDevicesByDeviceGroupType(Integer deviceGroupType) {
         List<Device> devices = new ArrayList<>();
-        for (int i=0; i<area.getDevices().size(); i++) {
+        for (int i = 0; i < area.getDevices().size(); i++) {
             Device device = area.getDevices().get(i);
             switch (deviceGroupType) {
                 case 0:

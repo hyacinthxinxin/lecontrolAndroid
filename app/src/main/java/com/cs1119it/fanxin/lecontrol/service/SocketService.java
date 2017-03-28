@@ -9,7 +9,9 @@ import android.os.IBinder;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.cs1119it.fanxin.lecontrol.DeviceActivity;
 import com.cs1119it.fanxin.lecontrol.unit.SocketManager;
 
 import java.io.IOException;
@@ -22,7 +24,7 @@ import java.net.Socket;
  * Created by fanxin on 2017/3/25.
  */
 
-public class SocketService extends Service {
+public class SocketService extends Service implements ReceiveData {
     private Socket clientSocket = null;
     private boolean stop = true;
     private SocketBinder socketBinder = new SocketBinder();
@@ -42,14 +44,19 @@ public class SocketService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        SocketManager.sharedSocket();
-        Log.d("service", "socket service created");
+        Log.d(this.getClass().getName(), "Created");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("service", "socket service start");
-        SocketManager.sharedSocket().reConnect();
+        Log.d(this.getClass().getName(), "Start");
+        new Thread() {
+            @Override
+            public void run() {
+                SocketManager.sharedSocket().setListener(SocketService.this);
+                super.run();
+            }
+        }.start();
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -58,4 +65,9 @@ public class SocketService extends Service {
         super.sendBroadcast(intent);
     }
 
+    @Override
+    public void receiveData(String str) {
+        Log.d(this.getClass().getName(), str);
+//        Toast.makeText(getBaseContext(), str, Toast.LENGTH_SHORT).show();
+    }
 }

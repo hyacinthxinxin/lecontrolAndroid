@@ -24,7 +24,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeviceActivity extends AppCompatActivity implements ReceiveData {
+public class DeviceActivity extends AppCompatActivity  {
     List<Device> devices;
     Integer deviceGroupType;
 
@@ -36,15 +36,6 @@ public class DeviceActivity extends AppCompatActivity implements ReceiveData {
         getIntentValues();
         initData();
         initView();
-
-        new Thread() {
-            @Override
-            public void run() {
-                SocketManager.sharedSocket().setReceiveData(DeviceActivity.this);
-                super.run();
-            }
-        };
-
     }
 
     private void setupToolBar() {
@@ -86,9 +77,6 @@ public class DeviceActivity extends AppCompatActivity implements ReceiveData {
     }
 
 
-    @Override
-    public void receiveData(String str) {
-        Toast.makeText(getBaseContext(), str, Toast.LENGTH_SHORT).show();
-    }
+
 
 }
