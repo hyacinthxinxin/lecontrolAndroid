@@ -64,7 +64,16 @@ public class Device extends LecModel implements Serializable {
                 return cam;
             }
         }
-        return new Cam();
+        return null;
+    }
+
+    public Cam getCamByCamName(String camName) {
+        for (Cam cam: getCams()) {
+            if (cam.getName().equals(camName)) {
+                return cam;
+            }
+        }
+        return null;
     }
 
 }

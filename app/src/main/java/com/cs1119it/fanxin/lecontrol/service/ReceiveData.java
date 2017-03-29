@@ -8,5 +8,4 @@ import java.io.ByteArrayInputStream;
 
 public interface ReceiveData {
     public void receiveData(String str);
-
 }

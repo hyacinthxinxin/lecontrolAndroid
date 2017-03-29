@@ -42,11 +42,8 @@ public class FloorAndAreaActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setLogo(R.mipmap.logo);
 
-        setTitle("乐控");
         initData();
         initView();
-
-
     }
 
 //    @Override
@@ -55,32 +52,14 @@ public class FloorAndAreaActivity extends AppCompatActivity {
 //        return true;
 //    }
 
-    private void initView() {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.floor_and_area_recycler_view);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(FloorAndAreaActivity.this, LinearLayoutManager.VERTICAL,false);
-        recyclerView.setLayoutManager(layoutManager);
-        FloorAndAreaAdapter adapter = new FloorAndAreaAdapter(areas);
-        adapter.setOnAreaClickListener(new FloorAndAreaAdapter.OnAreaClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                Intent intent = new Intent(FloorAndAreaActivity.this, AreaDetailActivity.class);
-//                Bundle bundle = new Bundle();
-                Area area = areas.get(position);
-//                bundle.putSerializable("area", area);
-//                intent.putExtras(bundle);
-                intent.putExtra("floorId", area.getFloorId());
-                intent.putExtra("areaId", area.getAreaId());
-                startActivity(intent);
-            }
-        });
-        recyclerView.setAdapter(adapter);
-    }
 
     private void initData(){
         areas = new ArrayList<>();
         Building building = SocketManager.sharedSocket().getBuilding();
+        setTitle(building.getName());
         for (int i=0; i< building.getFloors().size(); i++) {
             Floor floor = building.getFloors().get(i);
+            //添加虚拟的房间作为楼层的显示模型数据
             Area area = new Area(floor.getName(), "");
             area.setViewType(0);
             areas.add(area);
@@ -92,4 +71,25 @@ public class FloorAndAreaActivity extends AppCompatActivity {
         }
     }
 
+
+    private void initView() {
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.floor_and_area_recycler_view);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(FloorAndAreaActivity.this, LinearLayoutManager.VERTICAL,false);
+        recyclerView.setLayoutManager(layoutManager);
+        FloorAndAreaAdapter adapter = new FloorAndAreaAdapter(areas);
+        adapter.setOnAreaClickListener(new FloorAndAreaAdapter.OnAreaClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent intent = new Intent(FloorAndAreaActivity.this, AreaDetailActivity.class);
+                Area area = areas.get(position);
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable("area", area);
+//                intent.putExtras(bundle);
+                intent.putExtra("floorId", area.getFloorId());
+                intent.putExtra("areaId", area.getAreaId());
+                startActivity(intent);
+            }
+        });
+        recyclerView.setAdapter(adapter);
+    }
 }

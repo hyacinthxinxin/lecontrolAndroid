@@ -9,7 +9,6 @@ import com.cs1119it.fanxin.lecontrol.model.Cam;
 import com.cs1119it.fanxin.lecontrol.model.Device;
 import com.cs1119it.fanxin.lecontrol.model.Floor;
 import com.cs1119it.fanxin.lecontrol.service.ReceiveData;
-import com.google.common.io.ByteStreams;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,64 +36,74 @@ public class SocketManager {
     private boolean isConnected = false;
     private ReceiveData receiveData;
 
-    public static SocketManager sharedSocket() {
-        return SocketManagerHolder.sInstance;
-    }
+    //#1
+    private volatile static SocketManager socketManager;
 
-    private static class SocketManagerHolder {
-        private static final SocketManager sInstance = new SocketManager();
-    }
-
+    //#2
     private SocketManager() {
         setBuildingDetail();
-        reConnect();
-    }
-
-    private void reConnect() {
-        socket_address = building.getSocketAddress();
-        socket_port = building.getSocketPort();
         try {
-            client = new Socket(socket_address, socket_port);
-            client.setSoTimeout(3000);
-            isConnected = true;
-            Log.e("JAVA", "建立连接：" + client);
+            reConnect();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
-    public void setListener(ReceiveData receiveData) {
-        this.receiveData = receiveData;
-        Log.d("Socket Manager", "Receive Data");
-        while (client != null && !client.isClosed()) {
-            try {
-                InputStream inputStream = client.getInputStream();
-                byte[] bytes = new byte[0];
-                bytes = new byte[inputStream.available()];
-                inputStream.read(bytes);
-                this.receiveData.receiveData(ByteStringUtil.byteArrayToHexStr(bytes));
-            } catch (IOException e) {
-                e.printStackTrace();
+    //#3
+    public static SocketManager sharedSocket() {
+        if (socketManager == null) {
+            synchronized (SocketManager.class) {
+                if (socketManager == null) {
+                    socketManager = new SocketManager();
+                }
             }
         }
-
+        return socketManager;
     }
 
-    public void sendMsg(final String str) {
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    if (!client.isClosed()) {
-                        client.getOutputStream().write(ByteStringUtil.hexStrToByteArray(str));
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                super.run();
+
+    private void reConnect() throws IOException {
+        socket_address = building.getSocketAddress();
+        socket_port = building.getSocketPort();
+        client = new Socket(socket_address, socket_port);
+        client.setSoTimeout(3000);
+        isConnected = true;
+        Log.e("JAVA", "建立连接：" + client);
+    }
+
+    private static boolean isConnect() {
+        return client != null && !client.isClosed() && client.isConnected();
+    }
+
+
+    public boolean setListener(ReceiveData receiveData) throws IOException {
+        this.receiveData = receiveData;
+        if (!isConnect())
+            return false;
+
+        while (client != null && !client.isClosed()) {
+            InputStream inputStream = client.getInputStream();
+
+            byte[] bytes = new byte[inputStream.available()];
+            int count = inputStream.read(bytes);
+            if (count > 0) {
+                this.receiveData.receiveData(ByteStringUtil.byteArrayToHexStr(bytes));
             }
-        }.start();
+        }
+        return true;
+    }
+
+    public boolean sendMsg(final String str) {
+        try {
+            if (!isConnect()) {
+                return false;
+            }
+            client.getOutputStream().write(ByteStringUtil.hexStrToByteArray(str));
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public void setReceiveData(ReceiveData receiveData) {
@@ -115,8 +124,6 @@ public class SocketManager {
     }
 
     public Building setBuildingDetail() {
-        building = new Building();
-
         InputStream inputStream = SocketManager.this.getClass().getClassLoader().getResourceAsStream("assets/" + "DefaultProject.json");
         InputStreamReader streamReader = new InputStreamReader(inputStream);
         BufferedReader reader = new BufferedReader(streamReader);
@@ -127,64 +134,12 @@ public class SocketManager {
                 stringBuilder.append(line);
             }
             reader.close();
-            reader.close();
             inputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try {
-            JSONObject buildingOb = new JSONObject(stringBuilder.toString());
-            building.setName(buildingOb.getString("name"));
-            building.setSocketAddress(buildingOb.getString("socket_address"));
-            building.setSocketPort(buildingOb.getInt("socket_port"));
 
-            JSONArray floorArray = buildingOb.getJSONArray("floors");
-            List<Floor> floors = new ArrayList<>();
-            for (int i = 0; i < floorArray.length(); i++) {
-                JSONObject floorOb = floorArray.getJSONObject(i);
-                Floor floor = new Floor();
-                floor.setFloorId(floorOb.getInt("id"));
-                floor.setName(floorOb.getString("name"));
-                JSONArray areaArray = floorOb.getJSONArray("areas");
-                List<Area> areas = new ArrayList<>();
-                for (int j = 0; j < areaArray.length(); j++) {
-                    JSONObject areaOb = areaArray.getJSONObject(j);
-                    Area area = new Area();
-                    area.setFloorId(areaOb.getInt("floor_id"));
-                    area.setAreaId(areaOb.getInt("id"));
-                    area.setName(areaOb.getString("name"));
-                    area.setImageName(areaOb.getString("image_name"));
-                    JSONArray deviceArray = areaOb.getJSONArray("devices");
-                    List<Device> devices = new ArrayList<>();
-                    for (int k = 0; k < deviceArray.length(); k++) {
-                        JSONObject deviceOb = deviceArray.getJSONObject(k);
-                        Device device = new Device();
-                        device.setName(deviceOb.getString("name"));
-                        device.setiType(deviceOb.getInt("i_type"));
-                        JSONArray camArray = deviceOb.getJSONArray("cams");
-                        List<Cam> cams = new ArrayList<>();
-                        for (int l = 0; l < camArray.length(); l++) {
-                            JSONObject camOb = camArray.getJSONObject(l);
-                            Cam cam = new Cam();
-                            cam.setiType(camOb.getInt("i_type"));
-                            cam.setName(camOb.getString("name"));
-                            cam.setControlAddress(camOb.getString("control_address"));
-                            cams.add(cam);
-                        }
-                        device.setCams(cams);
-                        devices.add(device);
-                    }
-                    area.setDevices(devices);
-                    areas.add(area);
-                }
-                floor.setAreas(areas);
-                floors.add(floor);
-            }
-            building.setFloors(floors);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
+        building = ParseJson.parseBuildingDetail(stringBuilder);
         return building;
     }
 

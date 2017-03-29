@@ -13,7 +13,7 @@
         layout="@layout/cam_speed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/device_fresh_air_temperature" />
+        android:layout_below="@+id/device_fresh_air_switch" />
 
 
 </RelativeLayout>

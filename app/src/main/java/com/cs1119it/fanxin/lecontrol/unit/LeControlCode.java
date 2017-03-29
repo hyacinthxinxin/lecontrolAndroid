@@ -12,7 +12,6 @@ public class LeControlCode {
     private String star,type_write,type_read,mainAd,middleAd,dataType,value,status,lrc,end;
     String len;
 
-
     public LeControlCode(String address, String dataType, Integer value) {
         String[] ads=address.split("/");
         for(int i=0;i<ads.length;i++){
@@ -31,11 +30,33 @@ public class LeControlCode {
         end="5a";
     }
 
+    public LeControlCode(String address, Integer dataType, Integer value) {
+        String[] ads=address.split("/");
+        for(int i=0;i<ads.length;i++){
+            if(ads[2].length()==1){
+                ads[2]="0"+ads[2];
+            }
+        }
+        star="7a";
+        type_write="40";
+        type_read="41";
+        mainAd=ads[0]+ads[1];
+        middleAd=ads[2];
+        if (dataType.equals(0)) {
+            this.dataType="00";
+        } else if (dataType.equals(1)) {
+            this.dataType="01";
+        } else {
+            this.dataType="02";
+        }
+        this.value = String.format("%2s", Integer.toHexString(value)).replace(' ', '0');
+        lrc="00";
+        end="5a";
+    }
+
 
     public String message(boolean type){
         if(type) {
-            Log.d("Code", dataType);
-            Log.d("Code", value);
             return star + type_write + mainAd + middleAd + dataType + value + lrc + end;
         } else {
             return star+type_read+mainAd+middleAd+dataType+lrc+end;

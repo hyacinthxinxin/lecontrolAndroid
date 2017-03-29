@@ -18,4 +18,6 @@
     <string name="cam_mode_ventilation">通风</string>
     <string name="cam_mode_desiccant">除湿</string>
 
+    <string name="tcp_error">与智能硬件连接出错，请确保已接入家庭网络</string>
+
 </resources>

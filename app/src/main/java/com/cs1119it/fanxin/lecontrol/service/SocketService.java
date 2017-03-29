@@ -5,21 +5,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.cs1119it.fanxin.lecontrol.DeviceActivity;
 import com.cs1119it.fanxin.lecontrol.unit.SocketManager;
-
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.ServerSocket;
 import java.net.Socket;
-
 /**
  * Created by fanxin on 2017/3/25.
  */
@@ -53,8 +47,12 @@ public class SocketService extends Service implements ReceiveData {
         new Thread() {
             @Override
             public void run() {
-                SocketManager.sharedSocket().setListener(SocketService.this);
-                super.run();
+                try {
+                    if(!SocketManager.sharedSocket().setListener(SocketService.this))
+                        Log.d(this.getName(), "Socket not Connect");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }.start();
         return super.onStartCommand(intent, flags, startId);
@@ -66,8 +64,42 @@ public class SocketService extends Service implements ReceiveData {
     }
 
     @Override
-    public void receiveData(String str) {
-        Log.d(this.getClass().getName(), str);
-//        Toast.makeText(getBaseContext(), str, Toast.LENGTH_SHORT).show();
+    public void receiveData(final String str) {
+        new Thread(){
+            @Override
+            public void run() {
+                for (String message: str.split("7A")) {
+                    if (message.length() > 10 ) {
+                        Integer first_address = Integer.parseInt(message.substring(2, 3), 16);
+                        Integer second_address = Integer.parseInt(message.substring(3, 4), 16);
+                        Integer third_address = Integer.parseInt(message.substring(4, 6), 16);
+                        String address = first_address + "/" + second_address + "/" + third_address;
+                        Integer value = Integer.parseInt(message.substring(8, 10), 16);
+
+                        Intent intent = new Intent("broadcast.action.GetMessage");
+                        intent.putExtra("Address", address);
+                        intent.putExtra("Value", value);
+                        sendOrderedBroadcast(intent, null);
+                    }
+                }
+                super.run();
+            }
+        }.start();
+
     }
+
+    private void sendMessage(String str) {
+        Message msg = new Message();
+        msg.what = 0;
+        msg.obj = str;
+        handler.sendMessage(msg);
+
+    }
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            Log.d(this.getClass().getName(), msg.toString());
+        }
+    };
 }

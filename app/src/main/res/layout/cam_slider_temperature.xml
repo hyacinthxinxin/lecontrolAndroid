@@ -22,6 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_below="@+id/cam_slider_temperature_textView"
         android:src="@mipmap/temperature_lower" />
 
     <SeekBar
@@ -29,6 +30,7 @@
         android:id="@+id/cam_slider_temperature_seekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/cam_slider_temperature_textView"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/tc_iv_tem2"
         android:layout_toRightOf="@+id/tc_iv_tem1" />
@@ -38,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/cam_slider_temperature_textView"
         android:src="@mipmap/temperature_higher" />
 
 </RelativeLayout>

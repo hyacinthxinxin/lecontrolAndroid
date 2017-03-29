@@ -17,13 +17,12 @@
         android:textColor="@color/mainTextColor"
         android:text="调光" />
 
-
     <ImageView
         android:id="@+id/lc_iv_brightness1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:layout_marginRight="2dp"
+        android:layout_below="@+id/cam_slider_light_textView"
         android:src="@mipmap/switch_dimmer" />
 
     <SeekBar
@@ -31,7 +30,7 @@
         style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/cam_slider_light_textView"
         android:layout_toLeftOf="@+id/lc_iv_brightness2"
         android:layout_toRightOf="@+id/lc_iv_brightness1"
         android:indeterminate="false" />
@@ -40,8 +39,9 @@
         android:id="@+id/lc_iv_brightness2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/cam_slider_light_textView"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginLeft="2dp"
         android:src="@mipmap/switch_brighter" />
 

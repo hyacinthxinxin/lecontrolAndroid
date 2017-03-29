@@ -15,14 +15,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    layout="@layout/cam_scene" />
+                    layout="@layout/cam_button_sender1" />
 
                 <include
                     android:id="@+id/device_curtain_sender2"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    layout="@layout/cam_scene" />
+                    layout="@layout/cam_button_sender1" />
 
                 <include
                     android:id="@+id/device_curtain_sender3"
@@ -30,17 +30,21 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#aa0011"
-                    layout="@layout/cam_scene" />
+                    layout="@layout/cam_button_sender1" />
 
                 <include
                     android:id="@+id/device_curtain_sender4"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    layout="@layout/cam_scene" />
+                    layout="@layout/cam_button_sender1" />
 
-
-
+                <include
+                    android:id="@+id/device_curtain_sender5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    layout="@layout/cam_button_sender1" />
         </LinearLayout>
 
 </RelativeLayout>

@@ -7,9 +7,12 @@ import java.io.Serializable;
  */
 
 public class Cam extends LecModel implements Serializable {
-    Integer iType;
     Integer deviceId;
+    Integer camId;
+    Integer iType;
+    Integer controlType;
     String controlAddress;
+    Integer controlValue;
 
     public String getControlAddress() {
         return controlAddress;
@@ -27,7 +30,6 @@ public class Cam extends LecModel implements Serializable {
         this.deviceId = deviceId;
     }
 
-    Integer camId;
 
     public Integer getCamId() {
         return camId;
@@ -41,14 +43,18 @@ public class Cam extends LecModel implements Serializable {
         this.name = "";
         this.imageName = "";
         this.iType = 0;
+        this.controlType = 0;
         this.controlAddress = "0/0/0";
+        this.controlValue = 0;
     }
 
     public Cam(String name, String imageName) {
         this.name = name;
         this.imageName = imageName;
         this.iType = 0;
+        this.controlType = 0;
         this.controlAddress = "0/0/0";
+        this.controlValue = 0;
     }
 
     public Integer getiType() {
@@ -57,5 +63,21 @@ public class Cam extends LecModel implements Serializable {
 
     public void setiType(Integer iType) {
         this.iType = iType;
+    }
+
+    public Integer getControlValue() {
+        return controlValue;
+    }
+
+    public void setControlValue(Integer controlValue) {
+        this.controlValue = controlValue;
+    }
+
+    public Integer getControlType() {
+        return controlType;
+    }
+
+    public void setControlType(Integer controlType) {
+        this.controlType = controlType;
     }
 }

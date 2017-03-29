@@ -1,6 +1,9 @@
 package com.cs1119it.fanxin.lecontrol;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -27,6 +30,7 @@ import java.util.List;
 public class DeviceActivity extends AppCompatActivity  {
     List<Device> devices;
     Integer deviceGroupType;
+    MessageBroadCastReceiver messageBroadCastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,7 @@ public class DeviceActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_device);
         setupToolBar();
         getIntentValues();
+        signBroadCast();
         initData();
         initView();
     }
@@ -76,7 +81,27 @@ public class DeviceActivity extends AppCompatActivity  {
         recyclerView.setAdapter(deviceAdapter);
     }
 
+    class MessageBroadCastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String address = intent.getStringExtra("Address");
+            Integer value = intent.getIntExtra("Value", 0);
+            Log.d(this.getClass().getName(), "address:" + address + "value:" + value);
+        }
+    }
 
+    private void signBroadCast() {
+        messageBroadCastReceiver = new MessageBroadCastReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("broadcast.action.GetMessage");
+        intentFilter.setPriority(1000);
+        registerReceiver(messageBroadCastReceiver, intentFilter);
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(messageBroadCastReceiver);
+    }
 
 }
