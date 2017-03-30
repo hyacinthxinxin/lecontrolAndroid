@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -44,10 +45,9 @@ public class DeviceActivity extends AppCompatActivity  {
     }
 
     private void setupToolBar() {
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.device_toolbar);
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.device_app_bar_layout);
+        Toolbar toolbar = (Toolbar) appBarLayout.findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
-        toolbar.setLogo(R.mipmap.logo);
         toolbar.setNavigationIcon(R.mipmap.arrow_left);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,7 +55,6 @@ public class DeviceActivity extends AppCompatActivity  {
                 finish();
             }
         });
-
     }
 
     private void getIntentValues() {

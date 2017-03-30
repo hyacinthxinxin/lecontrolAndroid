@@ -18,11 +18,10 @@ import java.util.List;
  */
 
 public class ParseJson {
-    public static Building parseBuildingDetail(StringBuilder stringBuilder) {
+    public static Building parseBuildingDetail(String string) {
         Building building = new Building();
-
         try {
-            JSONObject buildingOb = new JSONObject(stringBuilder.toString());
+            JSONObject buildingOb = new JSONObject(string);
             building.setName(buildingOb.getString("name"));
             building.setSocketAddress(buildingOb.getString("socket_address"));
             building.setSocketPort(buildingOb.getInt("socket_port"));
@@ -78,5 +77,9 @@ public class ParseJson {
         }
 
         return building;
+    }
+
+    public static Building parseBuildingDetail(StringBuilder stringBuilder) {
+        return parseBuildingDetail(stringBuilder.toString());
     }
 }

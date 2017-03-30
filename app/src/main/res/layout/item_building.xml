@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_building"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:paddingLeft="5dp"
+        android:paddingTop="20dp"
+        android:layout_marginBottom="5dp"
+        android:textColor="@color/mainTextColor"
+        android:textSize="14sp"
+        android:id="@+id/building_name_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:layout_below="@+id/building_name_textView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_line_vertical_height"
+        android:background="@color/mainTextColor" />
+
+</RelativeLayout>

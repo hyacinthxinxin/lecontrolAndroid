@@ -2,19 +2,19 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/area_device_coordinatorLayout"
+    android:id="@+id/config_coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/globalBg"
     android:orientation="vertical"
-    tools:context="com.cs1119it.fanxin.lecontrol.AreaDetailActivity">
+    tools:context="com.cs1119it.fanxin.lecontrol.ConfigActivity">
 
     <include
-        android:id="@+id/area_app_bar_layout"
+        android:id="@+id/config_app_bar_layout"
         layout="@layout/tool_bar" />
 
-    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/device_type_recycler_view"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/building_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior = "@string/appbar_scrolling_view_behavior" />

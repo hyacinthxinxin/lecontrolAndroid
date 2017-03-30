@@ -48,8 +48,7 @@ public class SocketService extends Service implements ReceiveData {
             @Override
             public void run() {
                 try {
-                    if(!SocketManager.sharedSocket().setListener(SocketService.this))
-                        Log.d(this.getName(), "Socket not Connect");
+                    if(!SocketManager.sharedSocket().setListener(SocketService.this));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

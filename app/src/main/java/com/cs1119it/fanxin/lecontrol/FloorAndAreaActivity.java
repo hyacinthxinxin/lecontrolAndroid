@@ -2,6 +2,7 @@ package com.cs1119it.fanxin.lecontrol;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -38,20 +40,26 @@ public class FloorAndAreaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_floor_and_area);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.home_toolbar);
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.home_app_bar_layout);
+        Toolbar toolbar = (Toolbar) appBarLayout.findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         toolbar.setLogo(R.mipmap.logo);
-
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                startActivity(new Intent(FloorAndAreaActivity.this, LoginActivity.class));
+                return true;
+            }
+        });
         initData();
         initView();
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_floor_and_area, menu);
-//        return true;
-//    }
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_floor_and_area, menu);
+        return true;
+    }
 
     private void initData(){
         areas = new ArrayList<>();

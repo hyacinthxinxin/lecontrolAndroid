@@ -42,11 +42,11 @@ public class SocketManager {
     //#2
     private SocketManager() {
         setBuildingDetail();
-        try {
+/*        try {
             reConnect();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     //#3
@@ -60,7 +60,6 @@ public class SocketManager {
         }
         return socketManager;
     }
-
 
     private void reConnect() throws IOException {
         socket_address = building.getSocketAddress();
@@ -123,6 +122,10 @@ public class SocketManager {
         return building;
     }
 
+    public void setBuilding(Building building) {
+        this.building = building;
+    }
+
     public Building setBuildingDetail() {
         InputStream inputStream = SocketManager.this.getClass().getClassLoader().getResourceAsStream("assets/" + "DefaultProject.json");
         InputStreamReader streamReader = new InputStreamReader(inputStream);
@@ -142,6 +145,7 @@ public class SocketManager {
         building = ParseJson.parseBuildingDetail(stringBuilder);
         return building;
     }
+
 
     private Floor getFloor(Integer floorId) {
         for (Floor floor : building.getFloors()) {
