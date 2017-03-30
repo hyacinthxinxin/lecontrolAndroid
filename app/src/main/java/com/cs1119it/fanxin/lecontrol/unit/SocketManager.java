@@ -1,5 +1,6 @@
 package com.cs1119it.fanxin.lecontrol.unit;
 
+import android.os.Environment;
 import android.util.Log;
 
 import com.alibaba.fastjson.util.IOUtils;
@@ -16,10 +17,12 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Array;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -30,11 +33,19 @@ import java.util.List;
  */
 
 public class SocketManager {
+    public boolean needRefresh = false;
     private static Socket client = null;
     private String socket_address;
     private int socket_port;
-    private boolean isConnected = false;
     private ReceiveData receiveData;
+
+    public boolean isNeedRefresh() {
+        return needRefresh;
+    }
+
+    public void setNeedRefresh(boolean needRefresh) {
+        this.needRefresh = needRefresh;
+    }
 
     //#1
     private volatile static SocketManager socketManager;
@@ -42,11 +53,6 @@ public class SocketManager {
     //#2
     private SocketManager() {
         setBuildingDetail();
-/*        try {
-            reConnect();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
     }
 
     //#3
@@ -61,35 +67,41 @@ public class SocketManager {
         return socketManager;
     }
 
-    private void reConnect() throws IOException {
-        socket_address = building.getSocketAddress();
-        socket_port = building.getSocketPort();
-        client = new Socket(socket_address, socket_port);
-        client.setSoTimeout(3000);
-        isConnected = true;
-        Log.e("JAVA", "建立连接：" + client);
+    public boolean reConnect() {
+        try {
+            socket_address = building.getSocketAddress();
+            socket_port = building.getSocketPort();
+            if (client == null) {
+                client = new Socket(socket_address, socket_port);
+            } else {
+                client.connect(new InetSocketAddress(socket_address, socket_port));
+            }
+            Log.e("JAVA", "建立连接：" + client);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     private static boolean isConnect() {
         return client != null && !client.isClosed() && client.isConnected();
     }
 
-
-    public boolean setListener(ReceiveData receiveData) throws IOException {
+    public void setListener(ReceiveData receiveData) {
         this.receiveData = receiveData;
-        if (!isConnect())
-            return false;
-
-        while (client != null && !client.isClosed()) {
-            InputStream inputStream = client.getInputStream();
-
-            byte[] bytes = new byte[inputStream.available()];
-            int count = inputStream.read(bytes);
-            if (count > 0) {
-                this.receiveData.receiveData(ByteStringUtil.byteArrayToHexStr(bytes));
+        while (isConnect()) {
+            try {
+                InputStream inputStream = client.getInputStream();
+                byte[] bytes = new byte[inputStream.available()];
+                int count = inputStream.read(bytes);
+                if (count > 0) {
+                    this.receiveData.receiveData(ByteStringUtil.byteArrayToHexStr(bytes));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
             }
         }
-        return true;
     }
 
     public boolean sendMsg(final String str) {
@@ -127,6 +139,8 @@ public class SocketManager {
     }
 
     public Building setBuildingDetail() {
+        readConfigFromFile();
+
         InputStream inputStream = SocketManager.this.getClass().getClassLoader().getResourceAsStream("assets/" + "DefaultProject.json");
         InputStreamReader streamReader = new InputStreamReader(inputStream);
         BufferedReader reader = new BufferedReader(streamReader);
@@ -146,6 +160,9 @@ public class SocketManager {
         return building;
     }
 
+    private void readConfigFromFile() {
+
+    }
 
     private Floor getFloor(Integer floorId) {
         for (Floor floor : building.getFloors()) {

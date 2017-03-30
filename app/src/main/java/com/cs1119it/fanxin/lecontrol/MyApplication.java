@@ -20,7 +20,10 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        startSocketService();
+    }
 
+    public void startSocketService() {
         Intent intent_socketService = new Intent(this, SocketService.class);
         startService(intent_socketService);
     }

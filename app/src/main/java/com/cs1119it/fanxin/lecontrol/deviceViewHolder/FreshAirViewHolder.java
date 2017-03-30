@@ -16,11 +16,14 @@ import com.cs1119it.fanxin.lecontrol.model.Device;
 import com.cs1119it.fanxin.lecontrol.unit.LeControlCode;
 import com.cs1119it.fanxin.lecontrol.unit.SocketManager;
 
+import static android.view.View.GONE;
+
 /**
  * Created by fanxin on 2017/3/25.
  */
 
 public class FreshAirViewHolder extends BaseDeviceViewHolder {
+
     private View freshAirSwitchView;
     private TextView freshAirNameTv;
     private Switch freshAirSwitchSwitch;//开关 60
@@ -44,8 +47,8 @@ public class FreshAirViewHolder extends BaseDeviceViewHolder {
         freshAirSpeedRadioButton3 = (RadioButton) freshAirSpeedRadioGroup.findViewById(R.id.cam_speed3);
 
         // TODO: 2017/3/29
-        freshAirSpeedRadioGroup.findViewById(R.id.cam_speed4).setVisibility(View.GONE);
-        freshAirSpeedRadioGroup.findViewById(R.id.cam_speed5).setVisibility(View.GONE);
+        freshAirSpeedRadioGroup.findViewById(R.id.cam_speed4).setVisibility(GONE);
+        freshAirSpeedRadioGroup.findViewById(R.id.cam_speed5).setVisibility(GONE);
     }
 
     @Override
@@ -56,24 +59,30 @@ public class FreshAirViewHolder extends BaseDeviceViewHolder {
     }
 
     private void setupFreshAirSwitchView() {
-        freshAirNameTv.setText(device.getName());
-        freshAirSwitchSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
-                new Thread() {
-                    @Override
-                    public void run() {
-                        Cam cam = device.getCamByCamType(40);
-                        if (cam != null) {
+        final Cam cam = device.getCamByCamType(60);
+        if (cam != null) {
+            freshAirNameTv.setText(device.getName());
+            freshAirSwitchSwitch.setChecked(cam.getControlValue().equals(1));
+            freshAirSwitchSwitch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final boolean isChecked = ((Switch) v).isChecked();
+                    new Thread() {
+                        @Override
+                        public void run() {
+
                             LeControlCode leControlCode = new LeControlCode(cam.getControlAddress(), cam.getControlType(), isChecked ? 1 : 0);
                             SocketManager.sharedSocket().sendMsg(leControlCode.message(true));
                             super.run();
-                        }
-                    }
-                }.start();
-            }
 
-        });
+                        }
+                    }.start();
+                }
+
+            });
+        } else {
+            freshAirSwitchView.setVisibility(GONE);
+        }
     }
 
     private void setupFreshAirSpeedView() {
@@ -81,23 +90,23 @@ public class FreshAirViewHolder extends BaseDeviceViewHolder {
         if (cam1 != null) {
             freshAirSpeedRadioButton1.setText(cam1.getName());
         } else {
-            freshAirSpeedRadioButton1.setVisibility(View.GONE);
+            freshAirSpeedRadioButton1.setVisibility(GONE);
         }
         Cam cam2 = device.getCamByCamType(62);
         if (cam2 != null) {
             freshAirSpeedRadioButton2.setText(cam2.getName());
         } else {
-            freshAirSpeedRadioButton2.setVisibility(View.GONE);
+            freshAirSpeedRadioButton2.setVisibility(GONE);
         }
         Cam cam3 = device.getCamByCamType(63);
         if (cam3 != null) {
             freshAirSpeedRadioButton3.setText(cam3.getName());
         } else {
-            freshAirSpeedRadioButton3.setVisibility(View.GONE);
+            freshAirSpeedRadioButton3.setVisibility(GONE);
         }
 
         if (cam1 == null && cam2 == null && cam3 == null) {
-            freshAirSpeedView.setVisibility(View.GONE);
+            freshAirSpeedView.setVisibility(GONE);
         } else {
             freshAirSpeedRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override

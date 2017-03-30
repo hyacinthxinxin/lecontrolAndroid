@@ -47,6 +47,7 @@ public class ParseJson {
                     for (int k = 0; k < deviceArray.length(); k++) {
                         JSONObject deviceOb = deviceArray.getJSONObject(k);
                         Device device = new Device();
+                        device.setDeviceId(deviceOb.getInt("id"));
                         device.setName(deviceOb.getString("name"));
                         device.setiType(deviceOb.getInt("i_type"));
                         JSONArray camArray = deviceOb.getJSONArray("cams");
@@ -56,9 +57,11 @@ public class ParseJson {
                             Cam cam = new Cam();
                             cam.setName(camOb.getString("name"));
                             cam.setImageName(camOb.getString("image_name"));
+                            cam.setDeviceId(camOb.getInt("device_id"));
                             cam.setiType(camOb.getInt("i_type"));
                             cam.setControlType(camOb.getInt("control_type"));
                             cam.setControlAddress(camOb.getString("control_address"));
+                            cam.setStatusAddress(camOb.getString("status_address"));
                             cam.setControlValue(camOb.getInt("control_value"));
                             cams.add(cam);
                         }

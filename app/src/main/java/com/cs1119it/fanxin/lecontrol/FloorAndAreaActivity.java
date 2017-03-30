@@ -34,6 +34,8 @@ import java.util.List;
 
 public class FloorAndAreaActivity extends AppCompatActivity {
     private List<Area> areas;
+    private RecyclerView recyclerView;
+    private FloorAndAreaAdapter floorAndAreaAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,19 @@ public class FloorAndAreaActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        if (SocketManager.sharedSocket().needRefresh) {
+            initData();
+            for (Area area: areas) {
+                Log.e(this.getLocalClassName(), area.getName());
+            }
+            initView();
+            SocketManager.sharedSocket().setNeedRefresh(false);
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_floor_and_area, menu);
         return true;
@@ -65,12 +80,15 @@ public class FloorAndAreaActivity extends AppCompatActivity {
         areas = new ArrayList<>();
         Building building = SocketManager.sharedSocket().getBuilding();
         setTitle(building.getName());
+
         for (int i=0; i< building.getFloors().size(); i++) {
             Floor floor = building.getFloors().get(i);
-            //添加虚拟的房间作为楼层的显示模型数据
             Area area = new Area(floor.getName(), "");
-            area.setViewType(0);
-            areas.add(area);
+            if (building.getFloors().size()>1) {
+                //添加虚拟的房间作为楼层的显示模型数据
+                area.setViewType(0);
+                areas.add(area);
+            }
             for (int j=0; j<floor.getAreas().size(); j++) {
                 area = floor.getAreas().get(j);
                 area.setViewType(1);
@@ -81,11 +99,11 @@ public class FloorAndAreaActivity extends AppCompatActivity {
 
 
     private void initView() {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.floor_and_area_recycler_view);
+        recyclerView = (RecyclerView) findViewById(R.id.floor_and_area_recycler_view);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(FloorAndAreaActivity.this, LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
-        FloorAndAreaAdapter adapter = new FloorAndAreaAdapter(areas);
-        adapter.setOnAreaClickListener(new FloorAndAreaAdapter.OnAreaClickListener() {
+        floorAndAreaAdapter = new FloorAndAreaAdapter(areas);
+        floorAndAreaAdapter.setOnAreaClickListener(new FloorAndAreaAdapter.OnAreaClickListener() {
             @Override
             public void onItemClick(int position) {
                 Intent intent = new Intent(FloorAndAreaActivity.this, AreaDetailActivity.class);
@@ -98,6 +116,6 @@ public class FloorAndAreaActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(floorAndAreaAdapter);
     }
 }

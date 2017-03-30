@@ -42,6 +42,9 @@ public class LeControlCode {
         type_read="41";
         mainAd=ads[0]+ads[1];
         middleAd=ads[2];
+
+        this.value = String.format("%2s", Integer.toHexString(value)).replace(' ', '0');
+
         if (dataType.equals(0)) {
             this.dataType="00";
         } else if (dataType.equals(1)) {
@@ -49,7 +52,6 @@ public class LeControlCode {
         } else {
             this.dataType="02";
         }
-        this.value = String.format("%2s", Integer.toHexString(value)).replace(' ', '0');
         lrc="00";
         end="5a";
     }
@@ -57,6 +59,9 @@ public class LeControlCode {
 
     public String message(boolean type){
         if(type) {
+            if (dataType.equals("02")) {
+                return star + type_write + mainAd + middleAd + dataType + value + "00" + lrc + end;
+            }
             return star + type_write + mainAd + middleAd + dataType + value + lrc + end;
         } else {
             return star+type_read+mainAd+middleAd+dataType+lrc+end;

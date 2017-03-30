@@ -1,5 +1,6 @@
 package com.cs1119it.fanxin.lecontrol.deviceViewHolder;
 
+import android.graphics.ImageFormat;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
@@ -12,11 +13,16 @@ import com.cs1119it.fanxin.lecontrol.model.Device;
 import com.cs1119it.fanxin.lecontrol.unit.LeControlCode;
 import com.cs1119it.fanxin.lecontrol.unit.SocketManager;
 
+import static android.view.View.GONE;
+
 /**
  * Created by fanxin on 2017/3/25.
  */
 
 public class FloorHeatViewHolder extends BaseDeviceViewHolder {
+    private static Integer minTemperature = 19;
+    private static Integer maxTemperature = 32;
+
     private View floorHeatSwitchView;
     private TextView floorHeatNameTv;
     private Switch floorHeatSwitchSwitch;//开关 50
@@ -31,7 +37,7 @@ public class FloorHeatViewHolder extends BaseDeviceViewHolder {
 
         floorHeatTemperatureView = itemView.findViewById(R.id.device_floor_heat_temperature);
         floorHeatTemperatureSeekBar = (SeekBar) floorHeatTemperatureView.findViewById(R.id.cam_slider_temperature_seekBar);
-        floorHeatTemperatureSeekBar.setMax(13);
+        floorHeatTemperatureSeekBar.setMax(maxTemperature-minTemperature);
 
     }
 
@@ -43,49 +49,61 @@ public class FloorHeatViewHolder extends BaseDeviceViewHolder {
     }
 
     private void setupFloorHeatSwitchView() {
-        floorHeatNameTv.setText(device.getName());
-        floorHeatSwitchSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
-                new Thread() {
-                    @Override
-                    public void run() {
-                        Cam cam = device.getCamByCamType(50);
-                        LeControlCode leControlCode = new LeControlCode(cam.getControlAddress(), cam.getControlType(), isChecked ? 1 : 0);
-                        SocketManager.sharedSocket().sendMsg(leControlCode.message(true));
-                        super.run();
-                    }
-                }.start();
-            }
+        final Cam cam = device.getCamByCamType(50);
+        if (cam != null) {
+            floorHeatNameTv.setText(device.getName());
+            floorHeatSwitchSwitch.setChecked(cam.getControlValue().equals(1));
+            floorHeatSwitchSwitch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final boolean isChecked = ((Switch) v).isChecked();
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            LeControlCode leControlCode = new LeControlCode(cam.getControlAddress(), cam.getControlType(), isChecked ? 1 : 0);
+                            SocketManager.sharedSocket().sendMsg(leControlCode.message(true));
+                            super.run();
+                        }
+                    }.start();
+                }
 
-        });
+            });
+        } else {
+            floorHeatSwitchView.setVisibility(GONE);
+        }
+
     }
 
     private void setupFloorHeatTemperatureView() {
-        floorHeatTemperatureSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        final Cam cam = device.getCamByCamType(51);
+        if (cam != null) {
+            floorHeatTemperatureSeekBar.setProgress(cam.getControlValue()-minTemperature);
+            floorHeatTemperatureSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-            }
+                }
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
 
-            }
+                }
 
-            @Override
-            public void onStopTrackingTouch(final SeekBar seekBar) {
-                new Thread() {
-                    @Override
-                    public void run() {
-                        super.run();
-                        Cam cam = device.getCamByCamType(51);
-                        LeControlCode leControlCode = new LeControlCode(cam.getControlAddress(), cam.getControlType(), seekBar.getProgress() + 18);
-                        SocketManager.sharedSocket().sendMsg(leControlCode.message(true));
-                    }
-                }.start();
-            }
-        });
+                @Override
+                public void onStopTrackingTouch(final SeekBar seekBar) {
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            super.run();
+                            LeControlCode leControlCode = new LeControlCode(cam.getControlAddress(), cam.getControlType(), seekBar.getProgress() + minTemperature);
+                            SocketManager.sharedSocket().sendMsg(leControlCode.message(true));
+                        }
+                    }.start();
+                }
+            });
+        } else {
+            floorHeatTemperatureView.setVisibility(GONE);
+        }
 
     }
 

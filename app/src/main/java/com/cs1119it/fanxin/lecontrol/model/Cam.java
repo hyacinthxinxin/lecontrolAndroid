@@ -7,12 +7,20 @@ import java.io.Serializable;
  */
 
 public class Cam extends LecModel implements Serializable {
+    public static Integer[] singleCamTypes = {0, 10, 20, 21, 30, 31, 32, 33, 34, 40, 41, 50, 51, 60};
+    public static Integer[] airConditioningSpeedCamTypes = {72,46,47,48,76};
+    public static Integer[] airConditioningModeCamTypes = {42,43,44,45};
+    public static Integer[] freshAirSpeedCamTypes = {61,62,63};
+
     Integer deviceId;
     Integer camId;
     Integer iType;
     Integer controlType;
     String controlAddress;
+    String statusAddress;
+
     Integer controlValue;
+    boolean checked;
 
     public String getControlAddress() {
         return controlAddress;
@@ -29,7 +37,6 @@ public class Cam extends LecModel implements Serializable {
     public void setDeviceId(Integer deviceId) {
         this.deviceId = deviceId;
     }
-
 
     public Integer getCamId() {
         return camId;
@@ -79,5 +86,21 @@ public class Cam extends LecModel implements Serializable {
 
     public void setControlType(Integer controlType) {
         this.controlType = controlType;
+    }
+
+    public String getStatusAddress() {
+        return statusAddress;
+    }
+
+    public void setStatusAddress(String statusAddress) {
+        this.statusAddress = statusAddress;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 }

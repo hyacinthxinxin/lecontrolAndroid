@@ -21,17 +21,22 @@ import com.cs1119it.fanxin.lecontrol.model.Cam;
 import com.cs1119it.fanxin.lecontrol.model.Device;
 import com.cs1119it.fanxin.lecontrol.service.ReceiveData;
 import com.cs1119it.fanxin.lecontrol.unit.ByteStringUtil;
+import com.cs1119it.fanxin.lecontrol.unit.LeControlCode;
 import com.cs1119it.fanxin.lecontrol.unit.SocketManager;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class DeviceActivity extends AppCompatActivity  {
+import static java.util.Arrays.*;
+
+public class DeviceActivity extends AppCompatActivity {
     List<Device> devices;
     Integer deviceGroupType;
     MessageBroadCastReceiver messageBroadCastReceiver;
+    DeviceAdapter deviceAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +47,7 @@ public class DeviceActivity extends AppCompatActivity  {
         signBroadCast();
         initData();
         initView();
+        sendReadingStatusCode();
     }
 
     private void setupToolBar() {
@@ -63,21 +69,32 @@ public class DeviceActivity extends AppCompatActivity  {
         deviceGroupType = intent.getIntExtra("DeviceGroupType", 0);
     }
 
-    private void initData(){
+    private void initData() {
         devices = SocketManager.sharedSocket().getDevicesByDeviceGroupType(this.deviceGroupType);
     }
 
     private void initView() {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.device_recycler_view);
         if (deviceGroupType == 0) {
-            RecyclerView.LayoutManager layoutManager = new GridLayoutManager(DeviceActivity.this, 2, GridLayoutManager.VERTICAL,false);
+            RecyclerView.LayoutManager layoutManager = new GridLayoutManager(DeviceActivity.this, 2, GridLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
         } else {
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(DeviceActivity.this, LinearLayoutManager.VERTICAL,false);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(DeviceActivity.this, LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
         }
-        DeviceAdapter deviceAdapter = new DeviceAdapter(devices);
+        deviceAdapter = new DeviceAdapter(devices);
         recyclerView.setAdapter(deviceAdapter);
+    }
+
+    private void sendReadingStatusCode() {
+        String string = "";
+        for (Cam cam : getAllCams()) {
+            if (!cam.getStatusAddress().equals("0/0/0")) {
+                LeControlCode leControlCode = new LeControlCode(cam.getStatusAddress(), cam.getControlType(), 0);
+                string = string.concat(leControlCode.message(false));
+            }
+        }
+        SocketManager.sharedSocket().sendMsg(string);
     }
 
     class MessageBroadCastReceiver extends BroadcastReceiver {
@@ -86,6 +103,74 @@ public class DeviceActivity extends AppCompatActivity  {
             String address = intent.getStringExtra("Address");
             Integer value = intent.getIntExtra("Value", 0);
             Log.d(this.getClass().getName(), "address:" + address + "value:" + value);
+            for (Device device : devices) {
+                Log.e("device type", String.valueOf(device.getiType()));
+
+                switch (device.getiType()) {
+                    case 0:
+                    case 3:
+                        break;
+                    case 1:
+                    case 2:
+                    case 5:
+                        for (Cam cam : device.getCams()) {
+                            if (cam.getStatusAddress().equals(address)) {
+                                cam.setControlValue(value);
+                            }
+                        }
+                        break;
+                    case 4:
+                        List<Cam> airConditioningSpeedCams = device.getCamsIn(Cam.airConditioningSpeedCamTypes);
+                        List<Cam> airConditioningModeCams = device.getCamsIn(Cam.airConditioningModeCamTypes);
+                        for (Cam cam : device.getCams()) {
+                            if (asList(Cam.singleCamTypes).contains(cam.getiType())) {
+                                if (cam.getStatusAddress().equals(address)) {
+                                    cam.setControlValue(value);
+                                }
+                            }
+                        }
+                        if (airConditioningSpeedCams.size() > 0) {
+                            for (Cam cam : airConditioningSpeedCams) {
+                                if (cam.getStatusAddress().equals(address) && cam.getControlValue().equals(value)) {
+                                    cam.setChecked(true);
+                                } else {
+                                    cam.setChecked(false);
+                                }
+                            }
+                        }
+                        if (airConditioningModeCams.size() > 0) {
+                            for (Cam cam : airConditioningModeCams) {
+                                if (cam.getStatusAddress().equals(address) && cam.getControlValue().equals(value)) {
+                                    cam.setChecked(true);
+                                } else {
+                                    cam.setChecked(false);
+                                }
+                            }
+                        }
+                        break;
+                    case 6:
+                        List<Cam> freshAirSpeedCams = device.getCamsIn(Cam.freshAirSpeedCamTypes);
+                        for (Cam cam : device.getCams()) {
+                            if (asList(Cam.singleCamTypes).contains(cam.getiType())) {
+                                if (cam.getStatusAddress().equals(address)) {
+                                    cam.setControlValue(value);
+                                }
+                            }
+                        }
+                        if (freshAirSpeedCams.size() > 0) {
+                            for (Cam cam : freshAirSpeedCams) {
+                                if (cam.getStatusAddress().equals(address) && cam.getControlValue().equals(value)) {
+                                    cam.setChecked(true);
+                                } else {
+                                    cam.setChecked(false);
+                                }
+                            }
+                        }
+                        break;
+                    default:break;
+                }
+            }
+            deviceAdapter.notifyDataSetChanged();
         }
     }
 
@@ -95,6 +180,16 @@ public class DeviceActivity extends AppCompatActivity  {
         intentFilter.addAction("broadcast.action.GetMessage");
         intentFilter.setPriority(1000);
         registerReceiver(messageBroadCastReceiver, intentFilter);
+    }
+
+    private List<Cam> getAllCams() {
+        List<Cam> cams = new ArrayList<>();
+        for (Device device : devices) {
+            for (Cam cam : device.getCams()) {
+                cams.add(cam);
+            }
+        }
+        return cams;
     }
 
     @Override

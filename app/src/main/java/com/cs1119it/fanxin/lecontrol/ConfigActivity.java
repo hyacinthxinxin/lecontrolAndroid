@@ -2,6 +2,7 @@ package com.cs1119it.fanxin.lecontrol;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -14,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.cs1119it.fanxin.lecontrol.adpter.AreaDetailAdapter;
 import com.cs1119it.fanxin.lecontrol.adpter.BuildingAdapter;
@@ -29,6 +31,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,13 +52,34 @@ public class ConfigActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
+        setupToolBar();
+        initData();
+        initView();
+        getBuildings();
+    }
+
+    private void setupToolBar() {
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.config_app_bar_layout);
         Toolbar toolbar = (Toolbar) appBarLayout.findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         toolbar.setLogo(R.mipmap.logo);
-
-        getBuildings();
-
+        toolbar.setNavigationIcon(R.mipmap.arrow_left);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+    private void initData() {
+        simpleBuildings = new ArrayList<>();
+    }
+    private void initView() {
+        RecyclerView recyclerView = (RecyclerView) this.findViewById(R.id.building_recycler_view);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        BuildingAdapter adapter = new BuildingAdapter(simpleBuildings);
+        recyclerView.setAdapter(adapter);
     }
 
     private static class LoadBuildingsHandler extends Handler {
@@ -89,7 +117,6 @@ public class ConfigActivity extends AppCompatActivity {
                 adapter.setOnBuildingChoose(new BuildingAdapter.OnBuildingChoose() {
                     @Override
                     public void onBuildingClick(int position) {
-//                        Intent intent = new Intent();
                         Integer buildingId = activity.simpleBuildings.get(position).getBuildingId();
                         TingSpectrumConnect.setBuild_id(buildingId);
                         activity.getBuildingDetail();
@@ -113,7 +140,9 @@ public class ConfigActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             final ConfigActivity activity = configActivityWeakReference.get();
-            activity.startActivity(new Intent(activity, FloorAndAreaActivity.class));
+            Intent intent = new Intent(activity, FloorAndAreaActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            activity.startActivity(intent);
         }
     }
 
@@ -165,7 +194,27 @@ public class ConfigActivity extends AppCompatActivity {
                     @Override
                     public Object parseNetworkResponse(Response response, int id) throws Exception {
                         String msg = response.body().string();
+
+                        String fileName = "config.json";
+                        File mFile = new File(Environment.getExternalStorageDirectory(), fileName);
+                        Writer writer = null;
+                        try {
+                            OutputStream out = new FileOutputStream(mFile);
+                            writer = new OutputStreamWriter(out);
+                            writer.write(msg);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        } finally{
+                            if (writer!=null) {
+                                writer.close();
+                            }
+                        }
+
+                        SocketManager.sharedSocket().setNeedRefresh(true);
                         SocketManager.sharedSocket().setBuilding(ParseJson.parseBuildingDetail(msg));
+                        MyApplication application = (MyApplication) getApplication();
+                        application.startSocketService();
+
                         loadBuildingDetailHandler.sendEmptyMessage(200);
                         return null;
                     }

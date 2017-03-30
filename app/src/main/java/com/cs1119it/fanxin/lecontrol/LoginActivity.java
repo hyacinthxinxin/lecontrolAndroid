@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
@@ -19,6 +20,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -33,6 +35,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cs1119it.fanxin.lecontrol.unit.SocketManager;
 import com.cs1119it.fanxin.lecontrol.unit.TingSpectrumConnect;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
@@ -85,6 +88,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        setupToolBar();
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -111,6 +115,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+    }
+
+    private void setupToolBar() {
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.login_app_bar_layout);
+        Toolbar toolbar = (Toolbar) appBarLayout.findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
+        toolbar.setLogo(R.mipmap.logo);
+        toolbar.setNavigationIcon(R.mipmap.arrow_left);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void populateAutoComplete() {
@@ -345,19 +363,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     .build();
             try {
                 Response response = client.newCall(request).execute();
-                TingSpectrumConnect.setAccessToken(response.header("access-token").toString());
-                TingSpectrumConnect.setClient(response.header("client").toString());
-                TingSpectrumConnect.setTokenType(response.header("token-type").toString());
-                TingSpectrumConnect.setUid(response.header("uid").toString());
-
                 String msg = response.body().string();
                 try {
-                    TingSpectrumConnect.setUser_id(new JSONObject(msg).getJSONObject("data").getString("id"));
+                    JSONObject jsonObject= new JSONObject(msg);
+                    if (jsonObject.has("errors")) {
+                        return false;
+                    } else {
+                        TingSpectrumConnect.setUser_id(jsonObject.getJSONObject("data").getString("id"));
+                        TingSpectrumConnect.setAccessToken(response.header("access-token").toString());
+                        TingSpectrumConnect.setClient(response.header("client").toString());
+                        TingSpectrumConnect.setTokenType(response.header("token-type").toString());
+                        TingSpectrumConnect.setUid(response.header("uid").toString());
+                        return true;
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    return false;
                 }
-
-                return true;
             } catch (IOException e) {
                 e.printStackTrace();
                 return false;
@@ -370,8 +392,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
-//                finish();
                 startActivity(new Intent(LoginActivity.this, ConfigActivity.class));
+                finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();

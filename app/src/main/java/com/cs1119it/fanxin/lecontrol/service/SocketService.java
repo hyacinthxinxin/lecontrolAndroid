@@ -47,10 +47,13 @@ public class SocketService extends Service implements ReceiveData {
         new Thread() {
             @Override
             public void run() {
-                try {
-                    if(!SocketManager.sharedSocket().setListener(SocketService.this));
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if(SocketManager.sharedSocket().reConnect()) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            SocketManager.sharedSocket().setListener(SocketService.this);
+                        }
+                    }).start();
                 }
             }
         }.start();
@@ -67,6 +70,7 @@ public class SocketService extends Service implements ReceiveData {
         new Thread(){
             @Override
             public void run() {
+                Log.d("***receiveData***", str);
                 for (String message: str.split("7A")) {
                     if (message.length() > 10 ) {
                         Integer first_address = Integer.parseInt(message.substring(2, 3), 16);
