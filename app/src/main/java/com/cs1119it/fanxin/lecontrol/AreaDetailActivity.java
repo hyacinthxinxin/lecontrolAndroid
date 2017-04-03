@@ -42,7 +42,6 @@ public class AreaDetailActivity extends AppCompatActivity {
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.area_app_bar_layout);
         Toolbar toolbar = (Toolbar) appBarLayout.findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
-        toolbar.setLogo(R.mipmap.logo);
         toolbar.setNavigationIcon(R.mipmap.arrow_left);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

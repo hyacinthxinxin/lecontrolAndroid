@@ -9,39 +9,42 @@ import com.cs1119it.fanxin.lecontrol.R;
 public class Constant {
     public static int getAreaImage(String name){
         switch (name){
-            case "chess-cards":
-                return R.mipmap.chess_cards_room;
-            case "study":
-                return R.mipmap.study_room;
-            case "hallway":
-                return R.mipmap.hallway_room;
-            case "children":
-                return R.mipmap.children_room;
-            case "dining":
-                return R.mipmap.dining_room;
             case "bar-counter":
-                return R.mipmap.bar_counter_room;
+                return R.drawable.room_icon_chess_cards;
+            case "chess-cards":
+                return R.drawable.room_icon_study;
+            case "children":
+                return R.drawable.room_icon_hallway;
             case "conference":
-                return R.mipmap.conference_room;
+                return R.drawable.room_icon_children;
+            case "dining":
+                return R.drawable.room_icon_dining;
             case "guest-rest":
-                return R.mipmap.guest_rest_room;
+                return R.drawable.room_icon_guest_rest;
+            case "hallway":
+                return R.drawable.room_icon_hallway;
             case "kitchen":
-                return R.mipmap.kitchen_room;
+                return R.drawable.room_icon_kitchen;
+            case "living":
+                return R.drawable.room_icon_living;
             case "main-bath":
-                return R.mipmap.main_bath_room;
-            case "main-bde":
-                return R.mipmap.main_bed_room;
+                return R.drawable.room_icon_main_bath;
+            case "main-bed":
+                return R.drawable.room_icon_main_bed;
             case "old":
-                return R.mipmap.old_room;
+                return R.drawable.room_icon_old;
             case "reading":
-                return R.mipmap.reading_room;
+                return R.drawable.room_icon_reading;
+            case "study":
+                return R.drawable.room_icon_study;
             case "the-porch":
-                return R.mipmap.the_porch_room;
+                return R.drawable.room_icon_the_porch;
+            case "video":
+                return R.drawable.room_icon_video;
             case "winter-garden":
-                return R.mipmap.wind_bigger;
-            case "other_room":
+                return R.drawable.room_icon_winter_garden;
             default:
-                return R.mipmap.other_room;
+                return R.drawable.room_icon_other;
         }
     }
 
@@ -60,11 +63,44 @@ public class Constant {
         }
     }
 
-    public static int getSceneImage(String name) {
+    public static int getSceneImage(String name, boolean selected) {
         switch (name) {
-            case "":
-                return R.mipmap.chess_cards_room;
-            default:return 0;
+            case "all_close":
+                return selected? R.drawable.mode_all_close_sel: R.drawable.mode_all_close_nor;
+            case "all_open":
+                return selected? R.drawable.mode_all_open_sel: R.drawable.mode_all_open_nor;
+            case "amuse":
+                return selected? R.drawable.mode_amuse_sel: R.drawable.mode_amuse_nor;
+            case "back_home":
+                return selected? R.drawable.mode_back_home_sel: R.drawable.mode_back_home_nor;
+            case "bath":
+                return selected? R.drawable.mode_bath_sel: R.drawable.mode_bath_nor;
+            case "chinese_food":
+                return selected? R.drawable.mode_chinese_food_sel: R.drawable.mode_chinese_food_nor;
+            case "leave_home":
+                return selected? R.drawable.mode_leave_home_sel: R.drawable.mode_leave_home_nor;
+            case "meal_preparation":
+                return selected? R.drawable.mode_meal_preparation_sel: R.drawable.mode_meal_preparation_nor;
+            case "morning":
+                return selected? R.drawable.mode_morning_sel: R.drawable.mode_morning_nor;
+            case "night":
+                return selected? R.drawable.mode_night_sel: R.drawable.mode_night_nor;
+            case "read":
+                return selected? R.drawable.mode_read_sel: R.drawable.mode_read_nor;
+            case "receive":
+                return selected? R.drawable.mode_receive_sel: R.drawable.mode_receive_nor;
+            case "rest":
+                return selected? R.drawable.mode_rest_sel: R.drawable.mode_rest_nor;
+            case "study":
+                return selected? R.drawable.mode_study_sel: R.drawable.mode_study_nor;
+            case "video":
+                return selected? R.drawable.mode_video_sel: R.drawable.mode_video_nor;
+            case "wash":
+                return selected? R.drawable.mode_wash_sel: R.drawable.mode_wash_nor;
+            case "western":
+                return selected? R.drawable.mode_western_sel: R.drawable.mode_western_nor;
+            default:
+                return selected? R.drawable.mode_other_sel: R.drawable.mode_other_nor;
         }
     }
 }

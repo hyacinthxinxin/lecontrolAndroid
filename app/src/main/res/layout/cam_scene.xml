@@ -13,7 +13,7 @@
         android:layout_marginTop="44dp"
         android:background="#00000000"
         android:contentDescription="Scene Image"
-        app:srcCompat="@mipmap/mode_back_home_nor"
+        app:srcCompat="@drawable/mode_all_close_nor"
         />
 
     <TextView

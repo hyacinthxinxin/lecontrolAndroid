@@ -2,6 +2,7 @@ package com.cs1119it.fanxin.lecontrol;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -45,7 +47,6 @@ public class FloorAndAreaActivity extends AppCompatActivity {
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.home_app_bar_layout);
         Toolbar toolbar = (Toolbar) appBarLayout.findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
-        toolbar.setLogo(R.mipmap.logo);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {

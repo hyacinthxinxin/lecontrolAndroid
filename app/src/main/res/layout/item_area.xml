@@ -20,7 +20,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="26dp"
             android:layout_marginRight="26dp"
-            android:src="@mipmap/logo"
+            android:src="@drawable/room_icon_other"
             android:contentDescription="Area Image"/>
 
         <TextView
