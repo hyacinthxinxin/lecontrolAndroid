@@ -7,9 +7,9 @@
     android:orientation="vertical">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/item_area_rl"
         android:layout_width="fill_parent"
         android:layout_height="60dp"
-        android:id="@+id/item_area_rl"
         android:background="@color/globalBg"
         android:padding="6dp">
 
@@ -20,16 +20,16 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="26dp"
             android:layout_marginRight="26dp"
-            android:src="@drawable/room_icon_other"
-            android:contentDescription="Area Image"/>
+            android:contentDescription="Area Image"
+            android:src="@drawable/room_icon_other" />
 
         <TextView
             android:id="@+id/area_name_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/area_image_imageView"
             android:layout_toEndOf="@+id/area_image_imageView"
+            android:layout_toRightOf="@+id/area_image_imageView"
             android:text=""
             android:textColor="@android:color/white"
             android:textSize="18sp" />
@@ -37,21 +37,18 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginRight="18dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginEnd="18dp"
+            android:layout_marginRight="18dp"
             android:src="@mipmap/arrow_right" />
 
     </RelativeLayout>
 
-    <View
+    <include
+        layout="@layout/seperator"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_line_vertical_height"
-        android:layout_marginLeft="@dimen/home_layout_horizontal_padding"
-        android:layout_marginStart="@dimen/home_layout_horizontal_padding"
-        android:background="@color/lineColor" />
-
+        android:layout_height="match_parent" />
 </LinearLayout>
 

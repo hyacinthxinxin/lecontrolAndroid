@@ -103,4 +103,20 @@ public class Constant {
                 return selected? R.drawable.mode_other_sel: R.drawable.mode_other_nor;
         }
     }
+    public static int getCurtainImage(String name, boolean selected) {
+        switch (name) {
+            case "curtain_open":
+                return selected? R.drawable.curtain_open_click: R.drawable.curtain_open;
+            case "curtain_close":
+                return selected? R.drawable.curtain_close_click: R.drawable.curtain_close;
+            case "curtain_up":
+                return selected? R.drawable.curtain_up_click: R.drawable.curtain_up;
+            case "curtain_down":
+                return selected? R.drawable.curtain_down_click: R.drawable.curtain_down;
+            case "curtain_stop":
+                return selected? R.drawable.curtain_pause_click: R.drawable.curtain_pause;
+            default:return 0;
+        }
+    }
+
 }

@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageButton
-        android:id="@+id/scene_imageButton"
+    <ImageView
+        android:id="@+id/scene_imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/scene_imageButton"
+        android:layout_below="@+id/scene_imageView"
         android:layout_marginTop="22dp"
         android:textColor="@color/mainTextColor"
         android:text="TextView" />

@@ -49,6 +49,7 @@ public class ParseJson {
                         Device device = new Device();
                         device.setDeviceId(deviceOb.getInt("id"));
                         device.setName(deviceOb.getString("name"));
+                        device.setImageName(deviceOb.getString("image_name"));
                         device.setiType(deviceOb.getInt("i_type"));
                         JSONArray camArray = deviceOb.getJSONArray("cams");
                         List<Cam> cams = new ArrayList<>();

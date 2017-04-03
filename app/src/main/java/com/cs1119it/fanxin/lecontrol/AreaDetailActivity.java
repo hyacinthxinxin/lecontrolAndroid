@@ -58,15 +58,29 @@ public class AreaDetailActivity extends AppCompatActivity {
         Integer areaId = intent.getIntExtra("areaId", 0);
         area = SocketManager.sharedSocket().getArea(floorId, areaId);
         setTitle(area.getName());
+
+        List<Integer> integers = new ArrayList<>();
+        deviceGroupTypes = new ArrayList<>();
+
+        for (Device device: area.getDevices()) {
+            integers.add(device.getiType());
+        }
+        if (integers.contains(0)) {
+            deviceGroupTypes.add(new DeviceGroupType(0, "场景", "device_group_scene"));
+        }
+        if (integers.contains(1) || integers.contains(2)) {
+            deviceGroupTypes.add(new DeviceGroupType(1, "灯光", "device_group_light"));
+        }
+        if (integers.contains(3)) {
+            deviceGroupTypes.add(new DeviceGroupType(2, "窗帘", "device_group_curtain"));
+        }
+        if (integers.contains(4) || integers.contains(5) || integers.contains(6)) {
+            deviceGroupTypes.add(new DeviceGroupType(3, "温度", "device_group_temperature"));
+        }
+
     }
 
     private void initView() {
-
-        deviceGroupTypes = new ArrayList<>();
-        deviceGroupTypes.add(new DeviceGroupType(0, "场景", "device_group_scene"));
-        deviceGroupTypes.add(new DeviceGroupType(1, "灯光", "device_group_light"));
-        deviceGroupTypes.add(new DeviceGroupType(2, "窗帘", "device_group_curtain"));
-        deviceGroupTypes.add(new DeviceGroupType(3, "温度", "device_group_temperature"));
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.device_type_recycler_view);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(AreaDetailActivity.this, 2, GridLayoutManager.VERTICAL, false);
@@ -77,9 +91,10 @@ public class AreaDetailActivity extends AppCompatActivity {
             @Override
             public void onDeviceTypeClick(int position) {
                 Intent intent = new Intent();
-                String type = deviceGroupTypes.get(position).getName();
-                intent.putExtra("DeviceGroupName", type);
-                intent.putExtra("DeviceGroupType", position);
+                String typeName = deviceGroupTypes.get(position).getName();
+                Integer type = deviceGroupTypes.get(position).getType();
+                intent.putExtra("DeviceGroupName", typeName);
+                intent.putExtra("DeviceGroupType", type);
                 intent.setClass(AreaDetailActivity.this, DeviceActivity.class);
                 startActivity(intent);
             }

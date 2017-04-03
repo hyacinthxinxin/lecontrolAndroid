@@ -13,28 +13,11 @@ import static java.util.Arrays.asList;
  */
 
 public class Device extends LecModel implements Serializable {
-    Integer iType;
-    List<Cam> cams;
-
-    Integer areaId;
-
-    public Integer getAreaId() {
-        return areaId;
-    }
-
-    public void setAreaId(Integer areaId) {
-        this.areaId = areaId;
-    }
-
-    Integer deviceId;
-
-    public Integer getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(Integer deviceId) {
-        this.deviceId = deviceId;
-    }
+    public Integer areaId;
+    public Integer deviceId;
+    public Integer iType;
+    public List<Cam> cams;
+    public boolean checked;
 
     public Device() {
         this.name = "";
@@ -44,6 +27,31 @@ public class Device extends LecModel implements Serializable {
     public Device(String name, String imageName) {
         this.name = name;
         this.imageName = imageName;
+    }
+
+    public Integer getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(Integer areaId) {
+        this.areaId = areaId;
+    }
+
+    public Integer getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(Integer deviceId) {
+        this.deviceId = deviceId;
+    }
+
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 
     public Integer getiType() {
@@ -62,7 +70,7 @@ public class Device extends LecModel implements Serializable {
         this.cams = cams;
     }
 
-
+    //
     public List<Cam> getCamsIn(Integer[] camTypes){
         List<Cam> cams = new ArrayList<>();
         for (Cam cam : this.cams) {

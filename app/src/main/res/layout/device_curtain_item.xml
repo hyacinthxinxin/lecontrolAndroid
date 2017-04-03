@@ -1,50 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#008888" >
+    android:layout_height="match_parent">
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <TextView
+        android:id="@+id/curtain_name_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/main_text_margin_left"
+        android:layout_marginStart="@dimen/main_text_margin_left"
+        android:text=""
+        android:textColor="@color/mainTextColor" />
+
+    <LinearLayout
+        android:id="@+id/curtain_ll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal">
+
+        <include
+            android:id="@+id/device_curtain_sender1"
+            layout="@layout/cam_button_sender1"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:orientation="horizontal">
-                <include
-                    android:id="@+id/device_curtain_sender1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    layout="@layout/cam_button_sender1" />
+            android:layout_weight="1"
+            android:visibility="gone" />
 
-                <include
-                    android:id="@+id/device_curtain_sender2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    layout="@layout/cam_button_sender1" />
+        <include
+            android:id="@+id/device_curtain_sender2"
+            layout="@layout/cam_button_sender1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="gone" />
 
-                <include
-                    android:id="@+id/device_curtain_sender3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="#aa0011"
-                    layout="@layout/cam_button_sender1" />
+        <include
+            android:id="@+id/device_curtain_sender3"
+            layout="@layout/cam_button_sender1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="gone" />
 
-                <include
-                    android:id="@+id/device_curtain_sender4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    layout="@layout/cam_button_sender1" />
+        <include
+            android:id="@+id/device_curtain_sender4"
+            layout="@layout/cam_button_sender1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="gone" />
 
-                <include
-                    android:id="@+id/device_curtain_sender5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    layout="@layout/cam_button_sender1" />
-        </LinearLayout>
+        <include
+            android:id="@+id/device_curtain_sender5"
+            layout="@layout/cam_button_sender1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <include
+        layout="@layout/seperator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/curtain_ll" />
 
 </RelativeLayout>

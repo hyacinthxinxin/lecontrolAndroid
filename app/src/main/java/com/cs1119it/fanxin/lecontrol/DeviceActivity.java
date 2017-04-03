@@ -104,8 +104,6 @@ public class DeviceActivity extends AppCompatActivity {
             Integer value = intent.getIntExtra("Value", 0);
             Log.d(this.getClass().getName(), "address:" + address + "value:" + value);
             for (Device device : devices) {
-                Log.e("device type", String.valueOf(device.getiType()));
-
                 switch (device.getiType()) {
                     case 0:
                     case 3:

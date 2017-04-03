@@ -7,10 +7,11 @@ import java.io.Serializable;
  */
 
 public class Cam extends LecModel implements Serializable {
-    public static Integer[] singleCamTypes = {0, 10, 20, 21, 30, 31, 32, 33, 34, 40, 41, 50, 51, 60};
-    public static Integer[] airConditioningSpeedCamTypes = {72,46,47,48,76};
-    public static Integer[] airConditioningModeCamTypes = {42,43,44,45};
-    public static Integer[] freshAirSpeedCamTypes = {61,62,63};
+    public static Integer[] singleCamTypes = {0, 10, 20, 21, 40, 41, 50, 51, 60};
+    public static Integer[] curtainCamTypes = {30, 31, 32, 33, 34};
+    public static Integer[] airConditioningSpeedCamTypes = {72, 46, 47, 48, 76};
+    public static Integer[] airConditioningModeCamTypes = {42, 43, 44, 45};
+    public static Integer[] freshAirSpeedCamTypes = {61, 62, 63};
 
     Integer deviceId;
     Integer camId;
