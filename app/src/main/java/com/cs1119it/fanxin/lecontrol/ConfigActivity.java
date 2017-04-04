@@ -194,11 +194,15 @@ public class ConfigActivity extends AppCompatActivity {
                     public Object parseNetworkResponse(Response response, int id) throws Exception {
                         String msg = response.body().string();
 
-                        String fileName = "config.json";
-                        File mFile = new File(Environment.getExternalStorageDirectory(), fileName);
+                        File sdCard = Environment.getExternalStorageDirectory();
+                        File dir = new File(sdCard.getAbsolutePath() + "/LeControl/");
+                        dir.mkdirs();
+
+                        File configFile = new File(dir, "config.json");
+
                         Writer writer = null;
                         try {
-                            OutputStream out = new FileOutputStream(mFile);
+                            OutputStream out = new FileOutputStream(configFile);
                             writer = new OutputStreamWriter(out);
                             writer.write(msg);
                         } catch (Exception e) {
@@ -210,9 +214,9 @@ public class ConfigActivity extends AppCompatActivity {
                         }
 
                         SocketManager.sharedSocket().setNeedRefresh(true);
-                        SocketManager.sharedSocket().setBuilding(ParseJson.parseBuildingDetail(msg));
-                        MyApplication application = (MyApplication) getApplication();
-                        application.startSocketService();
+                        SocketManager.sharedSocket().getDataModel().setBuilding(ParseJson.parseBuildingDetail(msg));
+//                        MyApplication application = (MyApplication) getApplication();
+//                        application.startSocketService();
 
                         loadBuildingDetailHandler.sendEmptyMessage(200);
                         return null;

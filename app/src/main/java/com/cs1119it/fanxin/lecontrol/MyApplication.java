@@ -1,10 +1,12 @@
 package com.cs1119it.fanxin.lecontrol;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 
 import com.cs1119it.fanxin.lecontrol.service.SocketService;
+import com.cs1119it.fanxin.lecontrol.unit.PollingUtils;
 import com.cs1119it.fanxin.lecontrol.unit.SocketManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 
@@ -17,9 +19,19 @@ import okhttp3.OkHttpClient;
  */
 
 public class MyApplication extends Application {
+    private static Context context;
+
+
+    //返回
+    public static Context getContextObject(){
+        return context;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
+        //获取Context
+        context = getApplicationContext();
         startSocketService();
     }
 
@@ -33,8 +45,4 @@ public class MyApplication extends Application {
         super.onConfigurationChanged(newConfig);
     }
 
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-    }
 }

@@ -1,6 +1,7 @@
 package com.cs1119it.fanxin.lecontrol;
 
 import android.content.Intent;
+import android.content.pm.ProviderInfo;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.AppBarLayout;
@@ -27,6 +28,8 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -61,9 +64,9 @@ public class FloorAndAreaActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (SocketManager.sharedSocket().needRefresh) {
+        if (SocketManager.sharedSocket().isNeedRefresh()) {
             initData();
-            for (Area area: areas) {
+            for (Area area : areas) {
                 Log.e(this.getLocalClassName(), area.getName());
             }
             initView();
@@ -77,20 +80,20 @@ public class FloorAndAreaActivity extends AppCompatActivity {
         return true;
     }
 
-    private void initData(){
+    private void initData() {
         areas = new ArrayList<>();
-        Building building = SocketManager.sharedSocket().getBuilding();
+        Building building = SocketManager.sharedSocket().getDataModel().getBuilding();
         setTitle(building.getName());
 
-        for (int i=0; i< building.getFloors().size(); i++) {
+        for (int i = 0; i < building.getFloors().size(); i++) {
             Floor floor = building.getFloors().get(i);
             Area area = new Area(floor.getName(), "");
-            if (building.getFloors().size()>1) {
+            if (building.getFloors().size() > 1) {
                 //添加虚拟的房间作为楼层的显示模型数据
                 area.setViewType(0);
                 areas.add(area);
             }
-            for (int j=0; j<floor.getAreas().size(); j++) {
+            for (int j = 0; j < floor.getAreas().size(); j++) {
                 area = floor.getAreas().get(j);
                 area.setViewType(1);
                 areas.add(area);
@@ -101,7 +104,7 @@ public class FloorAndAreaActivity extends AppCompatActivity {
 
     private void initView() {
         recyclerView = (RecyclerView) findViewById(R.id.floor_and_area_recycler_view);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(FloorAndAreaActivity.this, LinearLayoutManager.VERTICAL,false);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(FloorAndAreaActivity.this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         floorAndAreaAdapter = new FloorAndAreaAdapter(areas);
         floorAndAreaAdapter.setOnAreaClickListener(new FloorAndAreaAdapter.OnAreaClickListener() {

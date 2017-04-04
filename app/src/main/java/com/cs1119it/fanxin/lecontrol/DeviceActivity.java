@@ -13,21 +13,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.cs1119it.fanxin.lecontrol.adpter.DeviceAdapter;
-import com.cs1119it.fanxin.lecontrol.model.Area;
 import com.cs1119it.fanxin.lecontrol.model.Cam;
 import com.cs1119it.fanxin.lecontrol.model.Device;
-import com.cs1119it.fanxin.lecontrol.service.ReceiveData;
-import com.cs1119it.fanxin.lecontrol.unit.ByteStringUtil;
 import com.cs1119it.fanxin.lecontrol.unit.LeControlCode;
 import com.cs1119it.fanxin.lecontrol.unit.SocketManager;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.*;
@@ -70,7 +63,7 @@ public class DeviceActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        devices = SocketManager.sharedSocket().getDevicesByDeviceGroupType(this.deviceGroupType);
+        devices = SocketManager.sharedSocket().getDataModel().getDevicesByDeviceGroupType(this.deviceGroupType);
     }
 
     private void initView() {

@@ -344,7 +344,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
 
-
         @Override
         protected Boolean doInBackground(Void... params) {
             OkHttpClient client = new OkHttpClient();
@@ -364,7 +363,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 Response response = client.newCall(request).execute();
                 String msg = response.body().string();
                 try {
-                    JSONObject jsonObject= new JSONObject(msg);
+                    JSONObject jsonObject = new JSONObject(msg);
                     if (jsonObject.has("errors")) {
                         return false;
                     } else {

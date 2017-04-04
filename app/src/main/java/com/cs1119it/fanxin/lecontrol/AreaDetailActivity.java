@@ -56,7 +56,7 @@ public class AreaDetailActivity extends AppCompatActivity {
 //        area = (Area) intent.getSerializableExtra("area");
         Integer floorId = intent.getIntExtra("floorId", 0);
         Integer areaId = intent.getIntExtra("areaId", 0);
-        area = SocketManager.sharedSocket().getArea(floorId, areaId);
+        area = SocketManager.sharedSocket().getDataModel().getArea(floorId, areaId);
         setTitle(area.getName());
 
         List<Integer> integers = new ArrayList<>();
