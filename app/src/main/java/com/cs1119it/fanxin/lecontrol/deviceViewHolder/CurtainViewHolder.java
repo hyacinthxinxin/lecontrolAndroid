@@ -115,15 +115,6 @@ public class CurtainViewHolder extends BaseDeviceViewHolder {
             ImageButton ib = (ImageButton) v;
             ib.setImageResource(getCurtainImageByCamType(cam.getiType(), true));
 
-//            for (int i = 0; i < device.getCams().size(); i++) {
-//                Cam c = device.getCams().get(i);
-//                if (c.getCamId().equals(cam.getCamId())) {
-//                    c.setChecked(true);
-//                } else {
-//                    c.setChecked(false);
-//                }
-
-
             new Thread() {
                 @Override
                 public void run() {

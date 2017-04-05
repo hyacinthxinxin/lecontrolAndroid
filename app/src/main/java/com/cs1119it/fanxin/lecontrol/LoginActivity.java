@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        setupToolBar();
+        setupToolBar("登录");
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -117,7 +117,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mProgressView = findViewById(R.id.login_progress);
     }
 
-    private void setupToolBar() {
+    private void setupToolBar(String title) {
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.login_app_bar_layout);
         Toolbar toolbar = (Toolbar) appBarLayout.findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
@@ -128,6 +128,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 finish();
             }
         });
+        TextView customTitleTextView = (TextView)  toolbar.findViewById(R.id.custom_title_textView);
+        customTitleTextView.setText(title);
+        setTitle("");
     }
 
     private void populateAutoComplete() {

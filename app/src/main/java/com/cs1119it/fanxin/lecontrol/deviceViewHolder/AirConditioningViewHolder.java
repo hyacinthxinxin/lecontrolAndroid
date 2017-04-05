@@ -4,6 +4,7 @@ import android.support.annotation.IdRes;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
@@ -33,6 +34,7 @@ public class AirConditioningViewHolder extends BaseDeviceViewHolder {
     private Switch airConditioningSwitchSwitch;//开关 40
 
     private View airConditioningTemperatureView;
+    private TextView airConditioningTemperatureTv;
     private SeekBar airConditioningTemperatureSeekBar;//调温  41
 
     private View airConditioningSpeedView;
@@ -57,8 +59,9 @@ public class AirConditioningViewHolder extends BaseDeviceViewHolder {
         airConditioningSwitchSwitch = (Switch) airConditioningSwitchView.findViewById(R.id.cam_switch_switch);
 
         airConditioningTemperatureView = itemView.findViewById(R.id.device_air_conditioning_temperature);
+        airConditioningTemperatureTv = (TextView) airConditioningTemperatureView.findViewById(R.id.cam_temperature_value_textView);
         airConditioningTemperatureSeekBar = (SeekBar) airConditioningTemperatureView.findViewById(R.id.cam_slider_temperature_seekBar);
-        airConditioningTemperatureSeekBar.setMax(maxTemperature-minTemperature);
+        airConditioningTemperatureSeekBar.setMax(maxTemperature - minTemperature);
 
         airConditioningSpeedView = itemView.findViewById(R.id.device_air_conditioning_speed);
         airConditioningSpeedRadioGroup = (RadioGroup) airConditioningSpeedView.findViewById(R.id.cam_speed_radioGroup);
@@ -99,7 +102,8 @@ public class AirConditioningViewHolder extends BaseDeviceViewHolder {
                         @Override
                         public void run() {
                             super.run();
-                            LeControlCode leControlCode = new LeControlCode(cam.getControlAddress(), cam.getControlType(), isChecked ? 1 : 0);
+                            cam.setControlValue(isChecked ? 1 : 0);
+                            LeControlCode leControlCode = new LeControlCode(cam.getControlAddress(), cam.getControlType(), cam.getControlValue());
                             SocketManager.sharedSocket().sendMsg(leControlCode.message(true));
 
                         }
@@ -114,11 +118,14 @@ public class AirConditioningViewHolder extends BaseDeviceViewHolder {
     private void setupAirConditioningTemperatureView() {
         final Cam cam = device.getCamByCamType(41);
         if (cam != null) {
-            airConditioningTemperatureSeekBar.setProgress(cam.getControlValue()-minTemperature);
+            String t = cam.getControlValue() + "℃";
+            airConditioningTemperatureTv.setText(t);
+            airConditioningTemperatureSeekBar.setProgress(cam.getControlValue() - minTemperature);
             airConditioningTemperatureSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+                    String t = String.valueOf(seekBar.getProgress() + minTemperature) + "℃";
+                    airConditioningTemperatureTv.setText(t);
                 }
 
                 @Override
@@ -132,7 +139,8 @@ public class AirConditioningViewHolder extends BaseDeviceViewHolder {
                         @Override
                         public void run() {
                             super.run();
-                            LeControlCode leControlCode = new LeControlCode(cam.getControlAddress(), cam.getControlType(), seekBar.getProgress() + minTemperature);
+                            cam.setControlValue(seekBar.getProgress() + minTemperature);
+                            LeControlCode leControlCode = new LeControlCode(cam.getControlAddress(), cam.getControlType(), cam.getControlValue());
                             SocketManager.sharedSocket().sendMsg(leControlCode.message(true));
 
                         }
@@ -146,52 +154,38 @@ public class AirConditioningViewHolder extends BaseDeviceViewHolder {
 
     private void setupAirConditioningSpeedView() {
         List<Cam> airConditioningSpeedCams = device.getCamsIn(Cam.airConditioningSpeedCamTypes);
-        if (airConditioningSpeedCams.size()>0) {
-            for (Cam cam: airConditioningSpeedCams) {
-
+        if (airConditioningSpeedCams.size() > 0) {
+            for (Cam cam : airConditioningSpeedCams) {
+                switch (cam.getiType()) {
+                    case 72:
+                        airConditioningSpeedRadioButton1.setText(cam.getName());
+                        airConditioningSpeedRadioButton1.setChecked(cam.isChecked());
+                        airConditioningSpeedRadioButton1.setVisibility(View.VISIBLE);
+                        break;
+                    case 46:
+                        airConditioningSpeedRadioButton2.setText(cam.getName());
+                        airConditioningSpeedRadioButton2.setChecked(cam.isChecked());
+                        airConditioningSpeedRadioButton2.setVisibility(View.VISIBLE);
+                        break;
+                    case 47:
+                        airConditioningSpeedRadioButton3.setText(cam.getName());
+                        airConditioningSpeedRadioButton3.setChecked(cam.isChecked());
+                        airConditioningSpeedRadioButton3.setVisibility(View.VISIBLE);
+                        break;
+                    case 48:
+                        airConditioningSpeedRadioButton4.setText(cam.getName());
+                        airConditioningSpeedRadioButton4.setChecked(cam.isChecked());
+                        airConditioningSpeedRadioButton4.setVisibility(View.VISIBLE);
+                        break;
+                    case 76:
+                        airConditioningSpeedRadioButton5.setText(cam.getName());
+                        airConditioningSpeedRadioButton5.setChecked(cam.isChecked());
+                        airConditioningSpeedRadioButton5.setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        break;
+                }
             }
-        } else {
-            airConditioningSpeedView.setVisibility(View.GONE);
-        }
-
-        Cam cam1 = device.getCamByCamType(72);
-        if (cam1 != null) {
-            airConditioningSpeedRadioButton1.setText(cam1.getName());
-            airConditioningSpeedRadioButton1.setChecked(cam1.isChecked());
-        } else {
-            airConditioningSpeedRadioButton1.setVisibility(View.GONE);
-        }
-        Cam cam2 = device.getCamByCamType(46);
-        if (cam2 != null) {
-            airConditioningSpeedRadioButton2.setText(cam2.getName());
-            airConditioningSpeedRadioButton2.setChecked(cam2.isChecked());
-        } else {
-            airConditioningSpeedRadioButton2.setVisibility(View.GONE);
-        }
-        Cam cam3 = device.getCamByCamType(47);
-        if (cam3 != null) {
-            airConditioningSpeedRadioButton3.setText(cam3.getName());
-            airConditioningSpeedRadioButton3.setChecked(cam3.isChecked());
-        } else {
-            airConditioningSpeedRadioButton3.setVisibility(View.GONE);
-        }
-        Cam cam4 = device.getCamByCamType(48);
-        if (cam4 != null) {
-            airConditioningSpeedRadioButton4.setText(cam4.getName());
-            airConditioningSpeedRadioButton4.setChecked(cam4.isChecked());
-        } else {
-            airConditioningSpeedRadioButton4.setVisibility(View.GONE);
-        }
-        Cam cam5 = device.getCamByCamType(76);
-        if (cam5 != null) {
-            airConditioningSpeedRadioButton5.setText(cam5.getName());
-            airConditioningSpeedRadioButton5.setChecked(cam5.isChecked());
-        } else {
-            airConditioningSpeedRadioButton5.setVisibility(View.GONE);
-        }
-        if (cam1 == null && cam2 == null && cam3 == null && cam4 == null && cam5 == null) {
-            airConditioningSpeedView.setVisibility(View.GONE);
-        } else {
             airConditioningSpeedRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
@@ -210,43 +204,42 @@ public class AirConditioningViewHolder extends BaseDeviceViewHolder {
                     }.start();
                 }
             });
+        } else {
+            airConditioningSpeedView.setVisibility(View.GONE);
         }
     }
 
+
+
     private void setupAirConditioningModeView() {
         List<Cam> airConditioningModeCams = device.getCamsIn(Cam.airConditioningModeCamTypes);
-        if (airConditioningModeCams.size()>0) {
-
-        } else {
-
-        }
-        Cam cam1 = device.getCamByCamType(42);
-        if (cam1 != null) {
-            airConditioningModeRadioButton1.setText(cam1.getName());
-        } else {
-            airConditioningModeRadioButton1.setVisibility(View.GONE);
-        }
-        Cam cam2 = device.getCamByCamType(43);
-        if (cam2 != null) {
-            airConditioningModeRadioButton2.setText(cam2.getName());
-        } else {
-            airConditioningModeRadioButton2.setVisibility(View.GONE);
-        }
-        Cam cam3 = device.getCamByCamType(44);
-        if (cam3 != null) {
-            airConditioningModeRadioButton3.setText(cam3.getName());
-        } else {
-            airConditioningModeRadioButton3.setVisibility(View.GONE);
-        }
-        Cam cam4 = device.getCamByCamType(45);
-        if (cam4 != null) {
-            airConditioningModeRadioButton4.setText(cam4.getName());
-        } else {
-            airConditioningModeRadioButton4.setVisibility(View.GONE);
-        }
-        if (cam1 == null && cam2 == null && cam3 == null && cam4 == null) {
-            airConditioningModeView.setVisibility(View.GONE);
-        } else {
+        if (airConditioningModeCams.size() > 0) {
+            for (Cam cam : airConditioningModeCams) {
+                switch (cam.getiType()) {
+                    case 42:
+                        airConditioningModeRadioButton1.setText(cam.getName());
+                        airConditioningModeRadioButton1.setChecked(cam.isChecked());
+                        airConditioningModeRadioButton1.setVisibility(View.VISIBLE);
+                        break;
+                    case 43:
+                        airConditioningModeRadioButton2.setText(cam.getName());
+                        airConditioningModeRadioButton2.setChecked(cam.isChecked());
+                        airConditioningModeRadioButton2.setVisibility(View.VISIBLE);
+                        break;
+                    case 44:
+                        airConditioningModeRadioButton3.setText(cam.getName());
+                        airConditioningModeRadioButton3.setChecked(cam.isChecked());
+                        airConditioningModeRadioButton3.setVisibility(View.VISIBLE);
+                        break;
+                    case 45:
+                        airConditioningModeRadioButton4.setText(cam.getName());
+                        airConditioningModeRadioButton4.setChecked(cam.isChecked());
+                        airConditioningModeRadioButton4.setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        break;
+                }
+            }
             airConditioningModeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
@@ -265,7 +258,10 @@ public class AirConditioningViewHolder extends BaseDeviceViewHolder {
                     }.start();
                 }
             });
+        } else {
+            airConditioningModeView.setVisibility(View.GONE);
         }
+
     }
 
 }

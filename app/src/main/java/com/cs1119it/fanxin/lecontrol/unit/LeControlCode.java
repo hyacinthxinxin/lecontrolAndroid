@@ -10,38 +10,20 @@ public class LeControlCode {
     public static String code = "7a4000010001005a";
 
     private String star,type_write,type_read,mainAd,middleAd,dataType,value,status,lrc,end;
-    String len;
-
-    public LeControlCode(String address, String dataType, Integer value) {
-        String[] ads=address.split("/");
-        for(int i=0;i<ads.length;i++){
-            if(ads[2].length()==1){
-                ads[2]="0"+ads[2];
-            }
-        }
-        star="7a";
-        type_write="40";
-        type_read="41";
-        mainAd=ads[0]+ads[1];
-        middleAd=ads[2];
-        this.dataType=dataType;
-        this.value = String.format("%2s", Integer.toHexString(value)).replace(' ', '0');
-        lrc="00";
-        end="5a";
-    }
 
     public LeControlCode(String address, Integer dataType, Integer value) {
-        String[] ads=address.split("/");
-        for(int i=0;i<ads.length;i++){
-            if(ads[2].length()==1){
-                ads[2]="0"+ads[2];
-            }
-        }
+
         star="7a";
         type_write="40";
         type_read="41";
-        mainAd=ads[0]+ads[1];
-        middleAd=ads[2];
+
+        String[] ads=address.split("/");
+        Integer first = Integer.parseInt(ads[0]);
+        Integer second = Integer.parseInt(ads[1]);
+        Integer third = Integer.parseInt(ads[2]);
+
+        mainAd=String.format("%1s", Integer.toHexString(first))+String.format("%1s", Integer.toHexString(second));
+        middleAd=String.format("%2s", Integer.toHexString(third)).replace(' ', '0');
 
         this.value = String.format("%2s", Integer.toHexString(value)).replace(' ', '0');
 

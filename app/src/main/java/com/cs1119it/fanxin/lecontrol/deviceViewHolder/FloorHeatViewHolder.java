@@ -27,6 +27,7 @@ public class FloorHeatViewHolder extends BaseDeviceViewHolder {
     private TextView floorHeatNameTv;
     private Switch floorHeatSwitchSwitch;//开关 50
     private View floorHeatTemperatureView;
+    private TextView floorHeatTemperatureTv;
     private SeekBar floorHeatTemperatureSeekBar;//调温  51
 
     public FloorHeatViewHolder(View itemView) {
@@ -36,6 +37,7 @@ public class FloorHeatViewHolder extends BaseDeviceViewHolder {
         floorHeatSwitchSwitch = (Switch) floorHeatSwitchView.findViewById(R.id.cam_switch_switch);
 
         floorHeatTemperatureView = itemView.findViewById(R.id.device_floor_heat_temperature);
+        floorHeatTemperatureTv = (TextView)  floorHeatTemperatureView.findViewById(R.id.cam_temperature_value_textView);
         floorHeatTemperatureSeekBar = (SeekBar) floorHeatTemperatureView.findViewById(R.id.cam_slider_temperature_seekBar);
         floorHeatTemperatureSeekBar.setMax(maxTemperature-minTemperature);
 
@@ -60,7 +62,8 @@ public class FloorHeatViewHolder extends BaseDeviceViewHolder {
                     new Thread() {
                         @Override
                         public void run() {
-                            LeControlCode leControlCode = new LeControlCode(cam.getControlAddress(), cam.getControlType(), isChecked ? 1 : 0);
+                            cam.setControlValue(isChecked ? 1 : 0);
+                            LeControlCode leControlCode = new LeControlCode(cam.getControlAddress(), cam.getControlType(), cam.getControlValue());
                             SocketManager.sharedSocket().sendMsg(leControlCode.message(true));
                             super.run();
                         }
@@ -77,11 +80,14 @@ public class FloorHeatViewHolder extends BaseDeviceViewHolder {
     private void setupFloorHeatTemperatureView() {
         final Cam cam = device.getCamByCamType(51);
         if (cam != null) {
+            String t = cam.getControlValue()+"℃";
+            floorHeatTemperatureTv.setText(t);
             floorHeatTemperatureSeekBar.setProgress(cam.getControlValue()-minTemperature);
             floorHeatTemperatureSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+                    String t = String.valueOf(seekBar.getProgress()+minTemperature)+"℃";
+                    floorHeatTemperatureTv.setText(t);
                 }
 
                 @Override
@@ -95,7 +101,8 @@ public class FloorHeatViewHolder extends BaseDeviceViewHolder {
                         @Override
                         public void run() {
                             super.run();
-                            LeControlCode leControlCode = new LeControlCode(cam.getControlAddress(), cam.getControlType(), seekBar.getProgress() + minTemperature);
+                            cam.setControlValue(seekBar.getProgress() + minTemperature);
+                            LeControlCode leControlCode = new LeControlCode(cam.getControlAddress(), cam.getControlType(), cam.getControlValue());
                             SocketManager.sharedSocket().sendMsg(leControlCode.message(true));
                         }
                     }.start();

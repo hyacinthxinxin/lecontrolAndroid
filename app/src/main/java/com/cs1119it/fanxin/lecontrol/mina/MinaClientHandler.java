@@ -16,29 +16,35 @@ import org.apache.mina.core.session.IoSession;
 public class MinaClientHandler extends IoHandlerAdapter {
     private String Tag = "MinaClientHandler";
 
+
     @Override
     public void sessionCreated(IoSession session) throws Exception {
         super.sessionCreated(session);
+        Log.e(Tag, "sessionCreated");
     }
 
     @Override
     public void sessionOpened(IoSession session) throws Exception {
         super.sessionOpened(session);
+        Log.e(Tag, "sessionOpened");
     }
 
     @Override
     public void sessionClosed(IoSession session) throws Exception {
         super.sessionClosed(session);
+        Log.e(Tag, "sessionClosed");
     }
 
     @Override
     public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
         super.sessionIdle(session, status);
+        Log.e(Tag, "sessionIdle");
     }
 
     @Override
     public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
         super.exceptionCaught(session, cause);
+        Log.e(Tag, "exceptionCaught");
     }
 
     @Override
@@ -66,11 +72,13 @@ public class MinaClientHandler extends IoHandlerAdapter {
     @Override
     public void messageSent(IoSession session, Object message) throws Exception {
         super.messageSent(session, message);
+        Log.e(Tag, "messageSent");
     }
 
     @Override
     public void inputClosed(IoSession session) throws Exception {
         super.inputClosed(session);
+        Log.e(Tag, "inputClosed");
     }
 
 }

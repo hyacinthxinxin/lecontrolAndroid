@@ -42,19 +42,15 @@ public class ByteArrayCodecFactory implements ProtocolCodecFactory {
         @Override
         public void encode(IoSession session, Object message, ProtocolEncoderOutput out) {
             if (message instanceof String) {
-                IoBuffer buffer = IoBuffer.allocate(256);
+                IoBuffer buffer = IoBuffer.allocate(1024);
                 buffer.setAutoExpand(true);
-
                 buffer.put(ByteStringUtil.hexStrToByteArray(message.toString()));
                 buffer.flip();
-
                 out.write(buffer);
                 out.flush();
-
                 buffer.free();
             }
         }
-
     }
 
     //解码

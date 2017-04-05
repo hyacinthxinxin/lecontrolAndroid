@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.cs1119it.fanxin.lecontrol.adpter.DeviceAdapter;
 import com.cs1119it.fanxin.lecontrol.model.Cam;
@@ -27,6 +28,7 @@ import static java.util.Arrays.*;
 
 public class DeviceActivity extends AppCompatActivity {
     List<Device> devices;
+    List<Cam> cams;
     Integer deviceGroupType;
     MessageBroadCastReceiver messageBroadCastReceiver;
     DeviceAdapter deviceAdapter;
@@ -35,15 +37,16 @@ public class DeviceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device);
-        setupToolBar();
         getIntentValues();
         signBroadCast();
         initData();
         initView();
-        sendReadingStatusCode();
+        if (SocketManager.sharedSocket().isMinaConnected) {
+            sendReadingStatusCode();
+        }
     }
 
-    private void setupToolBar() {
+    private void setupToolBar(String title) {
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.device_app_bar_layout);
         Toolbar toolbar = (Toolbar) appBarLayout.findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
@@ -54,16 +57,20 @@ public class DeviceActivity extends AppCompatActivity {
                 finish();
             }
         });
+        TextView customTitleTextView = (TextView) toolbar.findViewById(R.id.custom_title_textView);
+        customTitleTextView.setText(title);
+        setTitle("");
     }
 
     private void getIntentValues() {
         Intent intent = getIntent();
-        setTitle(intent.getStringExtra("DeviceGroupName"));
+        setupToolBar(intent.getStringExtra("DeviceGroupName"));
         deviceGroupType = intent.getIntExtra("DeviceGroupType", 0);
     }
 
     private void initData() {
         devices = SocketManager.sharedSocket().getDataModel().getDevicesByDeviceGroupType(this.deviceGroupType);
+        cams = getAllCams();
     }
 
     private void initView() {
@@ -81,7 +88,7 @@ public class DeviceActivity extends AppCompatActivity {
 
     private void sendReadingStatusCode() {
         String string = "";
-        for (Cam cam : getAllCams()) {
+        for (Cam cam : cams) {
             if (!cam.getStatusAddress().equals("0/0/0")) {
                 LeControlCode leControlCode = new LeControlCode(cam.getStatusAddress(), cam.getControlType(), 0);
                 string = string.concat(leControlCode.message(false));
@@ -96,72 +103,23 @@ public class DeviceActivity extends AppCompatActivity {
             String address = intent.getStringExtra("Address");
             Integer value = intent.getIntExtra("Value", 0);
             Log.d(this.getClass().getName(), "address:" + address + "value:" + value);
-            for (Device device : devices) {
-                switch (device.getiType()) {
-                    case 0:
-                    case 3:
-                        break;
-                    case 1:
-                    case 2:
-                    case 5:
-                        for (Cam cam : device.getCams()) {
-                            if (cam.getStatusAddress().equals(address)) {
-                                cam.setControlValue(value);
-                            }
+            List<Cam> statusCams = getAllCamsByStatusAddress(address);
+            if (statusCams.size() > 0) {
+                if (statusCams.size() == 1) {
+                    Cam cam = statusCams.get(0);
+                    cam.setControlValue(value);
+                } else {
+                    for (Cam subCam : statusCams) {
+                        if (subCam.getControlValue().equals(value)) {
+                            subCam.setChecked(true);
+                        } else {
+                            subCam.setChecked(false);
                         }
-                        break;
-                    case 4:
-                        List<Cam> airConditioningSpeedCams = device.getCamsIn(Cam.airConditioningSpeedCamTypes);
-                        List<Cam> airConditioningModeCams = device.getCamsIn(Cam.airConditioningModeCamTypes);
-                        for (Cam cam : device.getCams()) {
-                            if (asList(Cam.singleCamTypes).contains(cam.getiType())) {
-                                if (cam.getStatusAddress().equals(address)) {
-                                    cam.setControlValue(value);
-                                }
-                            }
-                        }
-                        if (airConditioningSpeedCams.size() > 0) {
-                            for (Cam cam : airConditioningSpeedCams) {
-                                if (cam.getStatusAddress().equals(address) && cam.getControlValue().equals(value)) {
-                                    cam.setChecked(true);
-                                } else {
-                                    cam.setChecked(false);
-                                }
-                            }
-                        }
-                        if (airConditioningModeCams.size() > 0) {
-                            for (Cam cam : airConditioningModeCams) {
-                                if (cam.getStatusAddress().equals(address) && cam.getControlValue().equals(value)) {
-                                    cam.setChecked(true);
-                                } else {
-                                    cam.setChecked(false);
-                                }
-                            }
-                        }
-                        break;
-                    case 6:
-                        List<Cam> freshAirSpeedCams = device.getCamsIn(Cam.freshAirSpeedCamTypes);
-                        for (Cam cam : device.getCams()) {
-                            if (asList(Cam.singleCamTypes).contains(cam.getiType())) {
-                                if (cam.getStatusAddress().equals(address)) {
-                                    cam.setControlValue(value);
-                                }
-                            }
-                        }
-                        if (freshAirSpeedCams.size() > 0) {
-                            for (Cam cam : freshAirSpeedCams) {
-                                if (cam.getStatusAddress().equals(address) && cam.getControlValue().equals(value)) {
-                                    cam.setChecked(true);
-                                } else {
-                                    cam.setChecked(false);
-                                }
-                            }
-                        }
-                        break;
-                    default:break;
+                    }
+
                 }
+                deviceAdapter.notifyDataSetChanged();
             }
-            deviceAdapter.notifyDataSetChanged();
         }
     }
 
@@ -181,6 +139,15 @@ public class DeviceActivity extends AppCompatActivity {
             }
         }
         return cams;
+    }
+
+    private List<Cam> getAllCamsByStatusAddress(String statusAddress) {
+        List<Cam> statusCams = new ArrayList<>();
+        for (Cam cam : cams) {
+            if (cam.getStatusAddress().equals(statusAddress))
+                statusCams.add(cam);
+        }
+        return statusCams;
     }
 
     @Override

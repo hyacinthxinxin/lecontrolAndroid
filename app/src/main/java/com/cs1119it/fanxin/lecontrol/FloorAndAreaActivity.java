@@ -14,17 +14,20 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cs1119it.fanxin.lecontrol.adpter.FloorAndAreaAdapter;
 import com.cs1119it.fanxin.lecontrol.model.Area;
 import com.cs1119it.fanxin.lecontrol.model.Building;
 import com.cs1119it.fanxin.lecontrol.model.Floor;
+import com.cs1119it.fanxin.lecontrol.service.SocketService;
 import com.cs1119it.fanxin.lecontrol.unit.SocketManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -45,18 +48,9 @@ public class FloorAndAreaActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent_socketService = new Intent(this, SocketService.class);
+        startService(intent_socketService);
         setContentView(R.layout.activity_floor_and_area);
-
-        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.home_app_bar_layout);
-        Toolbar toolbar = (Toolbar) appBarLayout.findViewById(R.id.tool_bar);
-        setSupportActionBar(toolbar);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                startActivity(new Intent(FloorAndAreaActivity.this, LoginActivity.class));
-                return true;
-            }
-        });
         initData();
         initView();
     }
@@ -66,9 +60,6 @@ public class FloorAndAreaActivity extends AppCompatActivity {
         super.onStart();
         if (SocketManager.sharedSocket().isNeedRefresh()) {
             initData();
-            for (Area area : areas) {
-                Log.e(this.getLocalClassName(), area.getName());
-            }
             initView();
             SocketManager.sharedSocket().setNeedRefresh(false);
         }
@@ -80,10 +71,30 @@ public class FloorAndAreaActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Intent intent_socketService = new Intent(this, SocketService.class);
+        stopService(intent_socketService);
+    }
+
     private void initData() {
         areas = new ArrayList<>();
         Building building = SocketManager.sharedSocket().getDataModel().getBuilding();
-        setTitle(building.getName());
+
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.home_app_bar_layout);
+        Toolbar toolbar = (Toolbar) appBarLayout.findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                startActivity(new Intent(FloorAndAreaActivity.this, LoginActivity.class));
+                return true;
+            }
+        });
+        TextView customTitleTextView = (TextView) toolbar.findViewById(R.id.custom_title_textView);
+        customTitleTextView.setText(building.getName());
+        setTitle("");
 
         for (int i = 0; i < building.getFloors().size(); i++) {
             Floor floor = building.getFloors().get(i);

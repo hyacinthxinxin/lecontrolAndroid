@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.cs1119it.fanxin.lecontrol.adpter.AreaDetailAdapter;
 import com.cs1119it.fanxin.lecontrol.adpter.BuildingAdapter;
@@ -52,13 +53,13 @@ public class ConfigActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
-        setupToolBar();
+        setupToolBar("项目列表");
         initData();
         initView();
         getBuildings();
     }
 
-    private void setupToolBar() {
+    private void setupToolBar(String title) {
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.config_app_bar_layout);
         Toolbar toolbar = (Toolbar) appBarLayout.findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
@@ -69,6 +70,8 @@ public class ConfigActivity extends AppCompatActivity {
                 finish();
             }
         });
+        TextView customTitleTextView = (TextView)  toolbar.findViewById(R.id.custom_title_textView);
+        customTitleTextView.setText(title);
     }
     private void initData() {
         simpleBuildings = new ArrayList<>();

@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:theme="@style/AppTheme.AppBarOverlay"
-    android:background="@color/globalBg">
+    android:background="@color/globalBg"
+    android:theme="@style/AppTheme.AppBarOverlay">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/tool_bar"
@@ -12,7 +12,19 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/globalBg"
         app:popupTheme="@style/AppTheme.PopupOverlay"
-        app:titleTextColor="@color/mainTextColor"/>
+        app:titleTextColor="@color/mainTextColor">
+
+        <TextView
+            android:id="@+id/custom_title_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/mainTextColor"
+            android:textSize="20sp" />
+
+    </android.support.v7.widget.Toolbar>
+
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_line_vertical_height"

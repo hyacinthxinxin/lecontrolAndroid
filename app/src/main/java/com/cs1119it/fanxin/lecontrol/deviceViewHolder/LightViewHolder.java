@@ -66,11 +66,13 @@ public class LightViewHolder extends BaseDeviceViewHolder {
                         LeControlCode leControlCode;
                         if (device.getCamByCamType(10) != null) {
                             Cam cam = device.getCamByCamType(10);
-                            leControlCode = new LeControlCode(cam.getControlAddress(), cam.getControlType(), isChecked ? 1 : 0);
+                            cam.setControlValue(isChecked ? 1 : 0);
+                            leControlCode = new LeControlCode(cam.getControlAddress(), cam.getControlType(), cam.getControlValue());
                             SocketManager.sharedSocket().sendMsg(leControlCode.message(true));
                         } else {
                             Cam cam = device.getCamByCamType(20);
-                            leControlCode = new LeControlCode(cam.getControlAddress(), cam.getControlType(), isChecked ? 1 : 0);
+                            cam.setControlValue(isChecked ? 1 : 0);
+                            leControlCode = new LeControlCode(cam.getControlAddress(), cam.getControlType(), cam.getControlValue());
                             SocketManager.sharedSocket().sendMsg(leControlCode.message(true));
                         }
                         super.run();
@@ -103,7 +105,8 @@ public class LightViewHolder extends BaseDeviceViewHolder {
                         public void run() {
                             super.run();
                             Cam cam = device.getCamByCamType(21);
-                            LeControlCode leControlCode = new LeControlCode(cam.getControlAddress(), "01", seekBar.getProgress());
+                            cam.setControlValue(seekBar.getProgress());
+                            LeControlCode leControlCode = new LeControlCode(cam.getControlAddress(), cam.getControlType(), cam.getControlValue());
                             SocketManager.sharedSocket().sendMsg(leControlCode.message(true));
                         }
                     }.start();

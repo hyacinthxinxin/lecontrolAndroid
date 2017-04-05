@@ -21,9 +21,8 @@ import okhttp3.OkHttpClient;
 public class MyApplication extends Application {
     private static Context context;
 
-
     //返回
-    public static Context getContextObject(){
+    public static Context getContextObject() {
         return context;
     }
 
@@ -32,17 +31,16 @@ public class MyApplication extends Application {
         super.onCreate();
         //获取Context
         context = getApplicationContext();
-        startSocketService();
-    }
-
-    public void startSocketService() {
-        Intent intent_socketService = new Intent(this, SocketService.class);
-        startService(intent_socketService);
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
     }
 
 }

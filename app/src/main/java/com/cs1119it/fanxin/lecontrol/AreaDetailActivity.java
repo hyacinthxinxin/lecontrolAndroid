@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cs1119it.fanxin.lecontrol.adpter.AreaDetailAdapter;
@@ -33,12 +34,11 @@ public class AreaDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_area_detail);
-        setupToolBar();
         getIntentValues();
         initView();
     }
 
-    private void setupToolBar() {
+    private void setupToolBar(String title) {
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.area_app_bar_layout);
         Toolbar toolbar = (Toolbar) appBarLayout.findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
@@ -49,6 +49,9 @@ public class AreaDetailActivity extends AppCompatActivity {
                 finish();
             }
         });
+        TextView customTitleTextView = (TextView)  toolbar.findViewById(R.id.custom_title_textView);
+        customTitleTextView.setText(title);
+        setTitle("");
     }
 
     private void getIntentValues(){
@@ -57,7 +60,7 @@ public class AreaDetailActivity extends AppCompatActivity {
         Integer floorId = intent.getIntExtra("floorId", 0);
         Integer areaId = intent.getIntExtra("areaId", 0);
         area = SocketManager.sharedSocket().getDataModel().getArea(floorId, areaId);
-        setTitle(area.getName());
+        setupToolBar(area.getName());
 
         List<Integer> integers = new ArrayList<>();
         deviceGroupTypes = new ArrayList<>();

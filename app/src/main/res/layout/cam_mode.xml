@@ -28,28 +28,32 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cam_mode_heating"
-            android:textColor="@color/mainTextColor" />
+            android:textColor="@color/mainTextColor"
+            android:visibility="gone" />
 
         <RadioButton
             android:id="@+id/cam_mode_refrigeration_radioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cam_mode_refrigeration"
-            android:textColor="@color/mainTextColor" />
+            android:textColor="@color/mainTextColor"
+            android:visibility="gone" />
 
         <RadioButton
             android:id="@+id/cam_mode_ventilation_radioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cam_mode_ventilation"
-            android:textColor="@color/mainTextColor" />
+            android:textColor="@color/mainTextColor"
+            android:visibility="gone" />
 
         <RadioButton
             android:id="@+id/cam_mode_desiccant_radioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cam_mode_desiccant"
-            android:textColor="@color/mainTextColor" />
+            android:textColor="@color/mainTextColor"
+            android:visibility="gone" />
 
     </RadioGroup>
 

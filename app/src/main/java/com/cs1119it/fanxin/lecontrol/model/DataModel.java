@@ -152,5 +152,10 @@ public class DataModel {
         }
         return devices;
     }
+
+    public Cam getCamByStatusAddress(String statusAddress) {
+
+        return null;
+    }
 }
 

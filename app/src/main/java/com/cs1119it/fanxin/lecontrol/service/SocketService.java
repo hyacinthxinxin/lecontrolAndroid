@@ -22,8 +22,6 @@ import java.net.Socket;
  */
 
 public class SocketService extends Service {
-    public static final String ACTION = "com.fanxin.lecontrol.service.SocketService";
-
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -32,11 +30,13 @@ public class SocketService extends Service {
 
     @Override
     public void onCreate() {
+        Log.e("Socket Service", "onCreate");
         super.onCreate();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.e("Socket Service", "onStartCommand");
         new Thread() {
             @Override
             public void run() {
@@ -46,17 +46,9 @@ public class SocketService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private void sendMessage(String str) {
-        Message msg = new Message();
-        msg.what = 0;
-        msg.obj = str;
-        handler.sendMessage(msg);
+    @Override
+    public void onDestroy() {
+        Log.e("Socket Service", "onDestroy");
+        super.onDestroy();
     }
-
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            Log.d(this.getClass().getName(), msg.toString());
-        }
-    };
 }

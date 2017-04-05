@@ -16,6 +16,8 @@ import com.cs1119it.fanxin.lecontrol.model.Device;
 import com.cs1119it.fanxin.lecontrol.unit.LeControlCode;
 import com.cs1119it.fanxin.lecontrol.unit.SocketManager;
 
+import java.util.List;
+
 import static android.view.View.GONE;
 
 /**
@@ -70,8 +72,8 @@ public class FreshAirViewHolder extends BaseDeviceViewHolder {
                     new Thread() {
                         @Override
                         public void run() {
-
-                            LeControlCode leControlCode = new LeControlCode(cam.getControlAddress(), cam.getControlType(), isChecked ? 1 : 0);
+                            cam.setControlValue(isChecked ? 1 : 0);
+                            LeControlCode leControlCode = new LeControlCode(cam.getControlAddress(), cam.getControlType(), cam.getControlValue());
                             SocketManager.sharedSocket().sendMsg(leControlCode.message(true));
                             super.run();
 
@@ -86,28 +88,29 @@ public class FreshAirViewHolder extends BaseDeviceViewHolder {
     }
 
     private void setupFreshAirSpeedView() {
-        Cam cam1 = device.getCamByCamType(61);
-        if (cam1 != null) {
-            freshAirSpeedRadioButton1.setText(cam1.getName());
-        } else {
-            freshAirSpeedRadioButton1.setVisibility(GONE);
-        }
-        Cam cam2 = device.getCamByCamType(62);
-        if (cam2 != null) {
-            freshAirSpeedRadioButton2.setText(cam2.getName());
-        } else {
-            freshAirSpeedRadioButton2.setVisibility(GONE);
-        }
-        Cam cam3 = device.getCamByCamType(63);
-        if (cam3 != null) {
-            freshAirSpeedRadioButton3.setText(cam3.getName());
-        } else {
-            freshAirSpeedRadioButton3.setVisibility(GONE);
-        }
-
-        if (cam1 == null && cam2 == null && cam3 == null) {
-            freshAirSpeedView.setVisibility(GONE);
-        } else {
+        List<Cam> freshAirSpeedCams = device.getCamsIn(Cam.freshAirSpeedCamTypes);
+        if (freshAirSpeedCams.size() > 0) {
+            for (Cam cam : freshAirSpeedCams) {
+                switch (cam.getiType()) {
+                    case 61:
+                        freshAirSpeedRadioButton1.setText(cam.getName());
+                        freshAirSpeedRadioButton1.setChecked(cam.isChecked());
+                        freshAirSpeedRadioButton1.setVisibility(View.VISIBLE);
+                        break;
+                    case 62:
+                        freshAirSpeedRadioButton2.setText(cam.getName());
+                        freshAirSpeedRadioButton2.setChecked(cam.isChecked());
+                        freshAirSpeedRadioButton2.setVisibility(View.VISIBLE);
+                        break;
+                    case 63:
+                        freshAirSpeedRadioButton3.setText(cam.getName());
+                        freshAirSpeedRadioButton3.setChecked(cam.isChecked());
+                        freshAirSpeedRadioButton3.setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        break;
+                }
+            }
             freshAirSpeedRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
@@ -126,8 +129,8 @@ public class FreshAirViewHolder extends BaseDeviceViewHolder {
                     }.start();
                 }
             });
+        } else {
+            freshAirSpeedView.setVisibility(GONE);
         }
     }
-
-
 }
