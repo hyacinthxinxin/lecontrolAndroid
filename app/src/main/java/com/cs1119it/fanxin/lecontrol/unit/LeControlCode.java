@@ -41,11 +41,21 @@ public class LeControlCode {
 
     public String message(boolean type){
         if(type) {
+            Integer integerLrc = ~(Integer.parseInt(star, 16) + Integer.parseInt(type_write, 16)
+                    + Integer.parseInt(mainAd, 16) + Integer.parseInt(middleAd, 16)
+                    + Integer.parseInt(dataType, 16) + Integer.parseInt(value, 16)) & 0x00ff;
+            integerLrc += 1;
+            lrc = String.format("%2s", Integer.toHexString(integerLrc)).replace(' ', '0');
             if (dataType.equals("02")) {
                 return star + type_write + mainAd + middleAd + dataType + value + "00" + lrc + end;
             }
             return star + type_write + mainAd + middleAd + dataType + value + lrc + end;
         } else {
+            Integer integerLrc = ~(Integer.parseInt(star, 16) + Integer.parseInt(type_read, 16)
+                    + Integer.parseInt(mainAd, 16) + Integer.parseInt(middleAd, 16)
+                    + Integer.parseInt(dataType, 16)) & 0x00ff;
+            integerLrc += 1;
+            lrc = String.format("%2s", Integer.toHexString(integerLrc)).replace(' ', '0');
             return star+type_read+mainAd+middleAd+dataType+lrc+end;
         }
     }

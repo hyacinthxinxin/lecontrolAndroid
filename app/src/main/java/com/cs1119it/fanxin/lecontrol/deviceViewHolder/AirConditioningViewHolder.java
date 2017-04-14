@@ -162,17 +162,17 @@ public class AirConditioningViewHolder extends BaseDeviceViewHolder {
                         airConditioningSpeedRadioButton1.setChecked(cam.isChecked());
                         airConditioningSpeedRadioButton1.setVisibility(View.VISIBLE);
                         break;
-                    case 46:
+                    case 73:
                         airConditioningSpeedRadioButton2.setText(cam.getName());
                         airConditioningSpeedRadioButton2.setChecked(cam.isChecked());
                         airConditioningSpeedRadioButton2.setVisibility(View.VISIBLE);
                         break;
-                    case 47:
+                    case 74:
                         airConditioningSpeedRadioButton3.setText(cam.getName());
                         airConditioningSpeedRadioButton3.setChecked(cam.isChecked());
                         airConditioningSpeedRadioButton3.setVisibility(View.VISIBLE);
                         break;
-                    case 48:
+                    case 75:
                         airConditioningSpeedRadioButton4.setText(cam.getName());
                         airConditioningSpeedRadioButton4.setChecked(cam.isChecked());
                         airConditioningSpeedRadioButton4.setVisibility(View.VISIBLE);
