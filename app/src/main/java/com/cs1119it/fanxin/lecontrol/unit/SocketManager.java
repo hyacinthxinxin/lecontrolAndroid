@@ -85,18 +85,48 @@ public class SocketManager {
         public void run() {
             super.run();
 //            Log.e("MinaThread", "客户端链接开始..." + socket_address + ":" + String.valueOf(socket_port));
+            if (!isMinaConnected) {
+                final IoConnector connector = new NioSocketConnector();
+                connector.setConnectTimeoutMillis(10000);
+                connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(new ByteArrayCodecFactory()));
+                connector.setDefaultRemoteAddress(new InetSocketAddress(socket_address, socket_port));
 
-            final IoConnector connector = new NioSocketConnector();
-            connector.setConnectTimeoutMillis(10000);
-            connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(new ByteArrayCodecFactory()));
-            connector.setDefaultRemoteAddress(new InetSocketAddress(socket_address, socket_port));
+                connector.setHandler(new MinaClientHandler() {
+                    @Override
+                    public void sessionClosed(IoSession session) throws Exception {
+                        super.sessionClosed(session);
+                        sendHandlerMessage("智能家居服务器连接断开");
+                        isMinaConnected = false;
+                        while (true) {
+                            try {
+                                Thread.sleep(5000);
+                                ConnectFuture future = connector.connect();
+                                future.awaitUninterruptibly();
+                                leSession = future.getSession();
+                                isMinaConnected = true;
+                                sendHandlerMessage("智能家居服务器重连成功");
+                                break;
+                            } catch (Exception e) {
+                                isMinaConnected = false;
+                            }
+                        }
+                    }
+                });
 
-            connector.setHandler(new MinaClientHandler() {
-                @Override
-                public void sessionClosed(IoSession session) throws Exception {
-                    super.sessionClosed(session);
-                    sendHandlerMessage("智能家居服务器连接断开");
+                try {
+                    ConnectFuture future = connector.connect();
+                    future.awaitUninterruptibly();
+                    leSession = future.getSession();
+                    isMinaConnected = true;
+                    Message message = new Message();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("msg", "智能家居服务器连接成功!");
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+                } catch (Exception e) {
                     isMinaConnected = false;
+                    // TODO: 2017/4/5
+                    sendHandlerMessage("智能家居服务器连接失败");
                     while (true) {
                         try {
                             Thread.sleep(5000);
@@ -104,40 +134,12 @@ public class SocketManager {
                             future.awaitUninterruptibly();
                             leSession = future.getSession();
                             isMinaConnected = true;
-                            sendHandlerMessage("智能家居服务器重连成功");
+                            sendHandlerMessage("智能家居服务器连接成功");
                             break;
-                        } catch (Exception e) {
+                        } catch (Exception e1) {
                             // TODO: 2017/4/5
+                            isMinaConnected = false;
                         }
-                    }
-                }
-            });
-
-            try {
-                ConnectFuture future = connector.connect();
-                future.awaitUninterruptibly();
-                leSession = future.getSession();
-                isMinaConnected = true;
-                Message message = new Message();
-                Bundle bundle = new Bundle();
-                bundle.putString("msg", "智能家居服务器连接成功!");
-                message.setData(bundle);
-                handler.sendMessage(message);
-            } catch (Exception e) {
-                isMinaConnected = false;
-                // TODO: 2017/4/5
-                sendHandlerMessage("智能家居服务器连接失败");
-                while (true) {
-                    try {
-                        Thread.sleep(5000);
-                        ConnectFuture future = connector.connect();
-                        future.awaitUninterruptibly();
-                        leSession = future.getSession();
-                        isMinaConnected = true;
-                        sendHandlerMessage("智能家居服务器连接成功");
-                        break;
-                    } catch (Exception e1) {
-                        // TODO: 2017/4/5
                     }
                 }
             }

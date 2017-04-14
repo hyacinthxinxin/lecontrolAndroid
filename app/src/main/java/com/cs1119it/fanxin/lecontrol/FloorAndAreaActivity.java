@@ -53,6 +53,7 @@ public class FloorAndAreaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_floor_and_area);
         initData();
         initView();
+        Log.e("FloorAndAreaActivity", "onCreate");
     }
 
     @Override
@@ -74,6 +75,7 @@ public class FloorAndAreaActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.e("FloorAndAreaActivity", "onDestroy");
         Intent intent_socketService = new Intent(this, SocketService.class);
         stopService(intent_socketService);
     }
