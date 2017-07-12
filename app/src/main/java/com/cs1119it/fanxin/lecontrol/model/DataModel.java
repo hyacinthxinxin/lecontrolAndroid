@@ -142,7 +142,7 @@ public class DataModel {
                     }
                     break;
                 case 3:
-                    if (device.getiType() == 4 || device.getiType() == 5 || device.getiType() == 6) {
+                    if (device.getiType() == 4 || device.getiType() == 5 || device.getiType() == 6 || device.getiType() == 7) {
                         devices.add(device);
                     }
                     break;

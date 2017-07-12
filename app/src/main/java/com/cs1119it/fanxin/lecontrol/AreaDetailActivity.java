@@ -77,7 +77,7 @@ public class AreaDetailActivity extends AppCompatActivity {
         if (integers.contains(3)) {
             deviceGroupTypes.add(new DeviceGroupType(2, "窗帘", "device_group_curtain"));
         }
-        if (integers.contains(4) || integers.contains(5) || integers.contains(6)) {
+        if (integers.contains(4) || integers.contains(5) || integers.contains(6) || integers.contains(7)) {
             deviceGroupTypes.add(new DeviceGroupType(3, "温度", "device_group_temperature"));
         }
 

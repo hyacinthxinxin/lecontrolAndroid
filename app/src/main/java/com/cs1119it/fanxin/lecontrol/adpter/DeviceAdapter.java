@@ -10,6 +10,7 @@ import com.cs1119it.fanxin.lecontrol.R;
 import com.cs1119it.fanxin.lecontrol.deviceViewHolder.AirConditioningViewHolder;
 import com.cs1119it.fanxin.lecontrol.deviceViewHolder.BaseDeviceViewHolder;
 import com.cs1119it.fanxin.lecontrol.deviceViewHolder.CurtainViewHolder;
+import com.cs1119it.fanxin.lecontrol.deviceViewHolder.EnvironmentViewHolder;
 import com.cs1119it.fanxin.lecontrol.deviceViewHolder.FloorHeatViewHolder;
 import com.cs1119it.fanxin.lecontrol.deviceViewHolder.FreshAirViewHolder;
 import com.cs1119it.fanxin.lecontrol.deviceViewHolder.LightViewHolder;
@@ -90,6 +91,9 @@ public class DeviceAdapter extends RecyclerView.Adapter {
             case 6:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.device_fresh_air_item, null);
                 return new FreshAirViewHolder(view);
+            case 7:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.device_environment_item, null);
+                return new EnvironmentViewHolder(view);
             default:
                 return null;
         }

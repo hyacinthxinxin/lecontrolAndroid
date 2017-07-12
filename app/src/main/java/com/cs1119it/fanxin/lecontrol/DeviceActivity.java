@@ -71,6 +71,9 @@ public class DeviceActivity extends AppCompatActivity {
     private void initData() {
         devices = SocketManager.sharedSocket().getDataModel().getDevicesByDeviceGroupType(this.deviceGroupType);
         cams = getAllCams();
+        for (Cam cam : cams) {
+            Log.d("TAG", cam.getName());
+        }
     }
 
     private void initView() {
